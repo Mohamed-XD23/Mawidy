@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>قائمة الحلاقين – Mawidy</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dark-mode-fix.css" />
+  <link rel="stylesheet" href="css/contrast-fix.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="workers-page">
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="nav-brand">
+        <h1 class="logo">Mawidy</h1>
+      </div>
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-link">الرئيسية</a>
+        <a href="worker_list.html" class="nav-link active">الحلاقين</a>
+        <a href="login.html" class="btn secondary-btn">تسجيل الدخول</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">الحلاقون المتاحون 💇‍♂️</h1>
+        <p class="page-description">اختر الحلاق المناسب لك واحجز موعدك بسهولة</p>
+      </div>
+
+      <!-- Filters Section -->
+      <div class="filters-section">
+        <div class="filters-container">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search-name" placeholder="ابحث بالاسم...">
+          </div>
+          
+          <div class="filter-group">
+            <select id="sort-rating" class="filter-select">
+              <option value="">ترتيب حسب التقييم</option>
+              <option value="high">الأعلى تقييمًا</option>
+              <option value="low">الأدنى تقييمًا</option>
+            </select>
+            
+            <select id="filter-availability" class="filter-select">
+              <option value="">كل الحالات</option>
+              <option value="true">المتاحون فقط</option>
+              <option value="false">غير المتاحين فقط</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workers Grid -->
+      <div class="workers-section">
+        <div id="workers-container" class="workers-grid">
+          <!-- Workers will be loaded here by JavaScript -->
+        </div>
+        
+        <!-- Loading State -->
+        <div id="loading-state" class="loading-state">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>جاري تحميل الحلاقين...</p>
+        </div>
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+          <i class="fas fa-search"></i>
+          <h3>لا توجد نتائج</h3>
+          <p>لم نجد أي حلاقين يطابقون معايير البحث</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/worker.js"></script>
+</body>
+</html>

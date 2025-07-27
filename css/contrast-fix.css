@@ -1,0 +1,142 @@
+/* =====================
+   تحسين التباين للأزرار الصفراء
+   Contrast Enhancement for Yellow Buttons
+   ===================== */
+
+/* تحسين الأزرار الأساسية */
+.primary-btn,
+.btn.primary-btn,
+.booking-btn,
+.book-btn {
+  background: var(--color-accent) !important;
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.primary-btn:hover,
+.btn.primary-btn:hover,
+.booking-btn:hover,
+.book-btn:hover {
+  background: var(--color-accent-dark) !important;
+  color: var(--color-primary) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* تحسين الأزرار مع الخلفية المتدرجة */
+.btn.primary-btn,
+.booking-form .btn-primary {
+  background: var(--color-accent) !important;
+  color: var(--color-primary) !important;
+  border: 2px solid var(--color-primary) !important;
+}
+
+.btn.primary-btn:hover,
+.booking-form .btn-primary:hover {
+  background: var(--color-accent-dark) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* تحسين أزرار التحرير */
+.edit-btn {
+  background: var(--color-accent) !important;
+  color: var(--color-primary) !important;
+  border: 1px solid var(--color-primary) !important;
+  font-weight: 600 !important;
+}
+
+.edit-btn:hover {
+  background: var(--color-accent-dark) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* تحسين العلامات المتخصصة */
+.specialty-tag:hover {
+  background: var(--color-accent) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  font-weight: 600 !important;
+}
+
+/* تحسين أزرار الحجز */
+.booking-form .btn-primary {
+  background: var(--color-accent) !important;
+  color: var(--color-primary) !important;
+  border: 2px solid var(--color-primary) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+.booking-form .btn-primary:hover:not(:disabled) {
+  background: var(--color-accent-dark) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* تحسين الأزرار في الوضع الداكن */
+@media (prefers-color-scheme: dark) {
+  .primary-btn,
+  .btn.primary-btn,
+  .booking-btn,
+  .book-btn,
+  .edit-btn {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+    border: 2px solid var(--color-primary) !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .primary-btn:hover,
+  .btn.primary-btn:hover,
+  .booking-btn:hover,
+  .book-btn:hover,
+  .edit-btn:hover {
+    background: var(--color-accent-dark) !important;
+    color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+  }
+}
+
+/* تحسين إضافي للنصوص على الخلفيات الصفراء */
+.hero-buttons .btn.primary-btn,
+.service-card .btn.primary-btn,
+.worker-card .btn.primary-btn {
+  background: var(--color-accent) !important;
+  color: var(--color-primary) !important;
+  border: 2px solid var(--color-primary) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  letter-spacing: 0.5px !important;
+}
+
+.hero-buttons .btn.primary-btn:hover,
+.service-card .btn.primary-btn:hover,
+.worker-card .btn.primary-btn:hover {
+  background: var(--color-accent-dark) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* تحسين النصوص في الأيقونات */
+.btn i {
+  text-shadow: inherit !important;
+}
+
+/* تحسين التباين للنصوص الصغيرة */
+.btn {
+  font-size: 1rem !important;
+  line-height: 1.4 !important;
+}
+
+/* تأكيد إضافي للتباين */
+.primary-btn *,
+.btn.primary-btn *,
+.booking-btn *,
+.book-btn * {
+  color: var(--color-primary) !important;
+  text-shadow: inherit !important;
+}

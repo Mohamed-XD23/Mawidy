@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ملف الحلاق – Mawidy</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dark-mode-fix.css" />
+  <link rel="stylesheet" href="css/contrast-fix.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="profile-container">
+    <!-- معلومات الحلاق -->
+    <div class="card">
+      <img id="worker-photo" class="worker-photo" src="img/default-avatar.png" alt="Barber" />
+      <h2 id="worker-name">اسم الحلاق</h2>
+      <p id="worker-phone">رقم الهاتف</p>
+      <p id="worker-bio" class="bio">نبذة عن الحلاق</p>
+      <p id="worker-status" class="worker-status">الحالة: <span>غير متوفر</span></p>
+      <p><strong>التقييم:</strong> <span id="worker-rating">0.0</span> ⭐</p>
+      <button id="bookNowBtn" class="btn primary-btn">احجز الآن</button>
+    </div>
+
+    <!-- التقييمات -->
+    <div class="reviews-section">
+      <h3>آراء العملاء</h3>
+      <div id="reviews-list">
+        <!-- سيتم توليد التقييمات ديناميكيًا -->
+      </div>
+
+      <form id="review-form">
+        <textarea id="review-text" placeholder="اكتب تعليقك هنا..." required></textarea>
+        <select id="review-rating" required>
+          <option value="">اختر تقييم</option>
+          <option value="1">⭐</option>
+          <option value="2">⭐⭐</option>
+          <option value="3">⭐⭐⭐</option>
+          <option value="4">⭐⭐⭐⭐</option>
+          <option value="5">⭐⭐⭐⭐⭐</option>
+        </select>
+        <button type="submit" class="btn primary-btn">إرسال</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Snackbar for notifications -->
+  <div id="snackbar"></div>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/worker_profile.js"></script>
+</body>
+</html>

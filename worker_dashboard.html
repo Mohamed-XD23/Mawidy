@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>لوحة الحلاق – Mawidy</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/worker_dashboard.css" />
+  <link rel="stylesheet" href="css/dark-mode-fix.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <h1 class="page-title">
+        <i class="fas fa-calendar-check"></i>
+        لوحة الحلاق - إدارة المواعيد
+      </h1>
+      <div class="header-actions">
+        <button id="refresh-btn" class="btn secondary-btn">
+          <i class="fas fa-sync-alt"></i>
+          تحديث
+        </button>
+        <button id="logout-btn" class="btn danger-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          تسجيل الخروج
+        </button>
+      </div>
+    </header>
+
+    <!-- إحصائيات سريعة -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon pending">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="pending-count">0</h3>
+          <p>بانتظار التأكيد</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon confirmed">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="confirmed-count">0</h3>
+          <p>تم التأكيد</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon rejected">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="stat-info">
+          <h3 id="rejected-count">0</h3>
+          <p>مرفوض</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- فلاتر -->
+    <div class="filters">
+      <select id="status-filter">
+        <option value="">جميع الحالات</option>
+        <option value="بانتظار التأكيد">بانتظار التأكيد</option>
+        <option value="تم التأكيد">تم التأكيد</option>
+        <option value="مرفوض">مرفوض</option>
+      </select>
+      <input type="date" id="date-filter" placeholder="فلترة حسب التاريخ">
+      <button id="clear-filters" class="btn secondary-btn">مسح الفلاتر</button>
+    </div>
+
+    <!-- قائمة المواعيد -->
+    <div id="appointments-list" class="appointments-container">
+      <div class="loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        جارٍ تحميل المواعيد...
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة تأكيد -->
+  <div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+      <h3 id="modal-title">تأكيد العملية</h3>
+      <p id="modal-message">هل أنت متأكد من هذا الإجراء؟</p>
+      <div class="modal-actions">
+        <button id="confirm-action" class="btn primary-btn">تأكيد</button>
+        <button id="cancel-action" class="btn secondary-btn">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/worker_dashboard.js"></script>
+</body>
+</html>

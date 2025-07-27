@@ -1,0 +1,445 @@
+/* =====================
+   Enhanced Dark Mode Support - إصلاح مشاكل الرؤية
+   ===================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #E0E0E0;
+    --color-secondary: #FF5252;
+    --color-accent: #FFD54F;
+    --color-accent-dark: #FFC107;
+    --color-accent-light: #FFF176;
+    --background-main: #1A1A1A;
+    --background-gradient: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
+    --card-background: #2D2D2D;
+    --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --card-shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.6);
+    --text-primary: #FFFFFF;
+    --text-secondary: #B0B0B0;
+    --text-muted: #808080;
+    --color-success: #66BB6A;
+    --color-warning: #FFA726;
+    --color-error: #EF5350;
+  }
+  
+  /* إصلاح الأزرار في الوضع المظلم */
+  .btn.primary-btn {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+    border: 2px solid var(--color-accent) !important;
+  }
+  
+  .btn.primary-btn:hover {
+    background: var(--color-accent-dark) !important;
+    color: var(--color-primary) !important;
+    box-shadow: 0 8px 24px rgba(255, 213, 79, 0.4) !important;
+  }
+  
+  .btn.secondary-btn {
+    background: transparent !important;
+    color: var(--color-accent) !important;
+    border: 2px solid var(--color-accent) !important;
+  }
+  
+  .btn.secondary-btn:hover {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+  }
+  
+  .btn.outline-btn {
+    background: transparent !important;
+    color: var(--color-accent) !important;
+    border: 2px solid var(--color-accent) !important;
+  }
+  
+  .btn.outline-btn:hover {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+  }
+  
+  /* إصلاح الروابط */
+  .nav-link {
+    color: var(--text-primary) !important;
+  }
+  
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--color-accent) !important;
+  }
+  
+  .forgot-link,
+  .signup-text {
+    color: var(--color-accent) !important;
+  }
+  
+  .forgot-link:hover,
+  .signup-text:hover {
+    color: var(--color-accent-light) !important;
+  }
+  
+  /* إصلاح حقول الإدخال */
+  .input-group input,
+  .filter-select,
+  .datetime-selection select,
+  .datetime-selection input[type="date"],
+  .search-box input {
+    background: var(--card-background) !important;
+    color: var(--text-primary) !important;
+    border-color: #404040 !important;
+  }
+  
+  .input-group input:focus,
+  .filter-select:focus,
+  .datetime-selection select:focus,
+  .datetime-selection input[type="date"]:focus,
+  .search-box input:focus {
+    border-color: var(--color-accent) !important;
+    box-shadow: 0 0 0 4px rgba(255, 213, 79, 0.15) !important;
+  }
+  
+  .input-group input::placeholder {
+    color: var(--text-muted) !important;
+  }
+  
+  /* إصلاح الأيقونات */
+  .eye-toggle {
+    color: var(--text-secondary) !important;
+  }
+  
+  .eye-toggle:hover {
+    color: var(--color-accent) !important;
+  }
+  
+  .search-box i {
+    color: var(--text-secondary) !important;
+  }
+  
+  /* إصلاح بطاقات الخدمات */
+  .service-card {
+    background: var(--card-background) !important;
+    border: 1px solid #404040 !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .service-card:hover {
+    border-color: var(--color-accent) !important;
+  }
+  
+  .service-title {
+    color: var(--text-primary) !important;
+  }
+  
+  .service-description {
+    color: var(--text-secondary) !important;
+  }
+  
+  /* إصلاح بطاقات العمال */
+  .worker-card {
+    background: var(--card-background) !important;
+    border: 1px solid #404040 !important;
+  }
+  
+  .worker-card:hover {
+    border-color: var(--color-accent) !important;
+  }
+  
+  .worker-info h3 {
+    color: var(--text-primary) !important;
+  }
+  
+  .worker-location {
+    color: var(--text-secondary) !important;
+  }
+  
+  /* إصلاح الفلاتر */
+  .filters-section {
+    background: var(--card-background) !important;
+    border: 1px solid #404040 !important;
+  }
+  
+  .filters-section:hover {
+    border-color: var(--color-accent) !important;
+  }
+  
+  /* إصلاح الأزرار الاجتماعية */
+  .social-btn {
+    background: var(--card-background) !important;
+    color: var(--text-primary) !important;
+    border-color: #404040 !important;
+  }
+  
+  .social-btn:hover {
+    border-color: var(--color-accent) !important;
+    background: rgba(255, 213, 79, 0.1) !important;
+  }
+  
+  /* إصلاح حالة التحميل */
+  .loading-state,
+  .empty-state {
+    color: var(--text-secondary) !important;
+  }
+  
+  .loading-state i,
+  .empty-state i {
+    color: var(--color-accent) !important;
+  }
+  
+  .empty-state h3 {
+    color: var(--text-primary) !important;
+  }
+  
+  /* إصلاح Footer */
+  .footer {
+    background: #0D0D0D !important;
+    border-top: 1px solid #404040 !important;
+  }
+  
+  .footer-brand .logo {
+    color: var(--color-accent) !important;
+  }
+  
+  .footer-brand p {
+    color: var(--text-secondary) !important;
+  }
+  
+  .footer-links h4 {
+    color: var(--color-accent) !important;
+  }
+  
+  .footer-links a {
+    color: var(--text-secondary) !important;
+  }
+  
+  .footer-links a:hover {
+    color: var(--color-accent) !important;
+  }
+  
+  .footer-bottom p {
+    color: var(--text-muted) !important;
+  }
+  
+  /* إصلاح Header */
+  .header {
+    background: var(--card-background) !important;
+    border-bottom: 1px solid #404040 !important;
+  }
+  
+  .nav-brand .logo {
+    color: var(--color-accent) !important;
+  }
+  
+  /* إصلاح Hero Section */
+  .hero {
+    background: var(--background-gradient) !important;
+  }
+  
+  .hero-title {
+    color: var(--text-primary) !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+  }
+  
+  .hero-description {
+    color: var(--text-secondary) !important;
+  }
+  
+  /* إصلاح العناوين */
+  .section-title,
+  .page-title,
+  .booking-title,
+  .welcome-title {
+    color: var(--text-primary) !important;
+  }
+  
+  .page-description,
+  .booking-description,
+  .description {
+    color: var(--text-secondary) !important;
+  }
+  
+  /* إصلاح OTP */
+  .otp-input {
+    background: var(--card-background) !important;
+    color: var(--text-primary) !important;
+    border-color: #404040 !important;
+  }
+  
+  .otp-input:focus {
+    border-color: var(--color-accent) !important;
+    box-shadow: 0 0 0 4px rgba(255, 213, 79, 0.15) !important;
+  }
+  
+  .resend-btn {
+    color: var(--color-accent) !important;
+  }
+  
+  .resend-btn:hover {
+    color: var(--color-accent-light) !important;
+    background: rgba(255, 213, 79, 0.1) !important;
+  }
+  
+  .resend-btn:disabled {
+    color: var(--text-muted) !important;
+    background: none !important;
+  }
+  
+  .resend-text {
+    color: var(--text-secondary) !important;
+  }
+  
+  /* إصلاح التقسيم */
+  .divider::before,
+  .divider::after {
+    background: linear-gradient(90deg, transparent, #404040, transparent) !important;
+  }
+  
+  .divider span {
+    color: var(--text-secondary) !important;
+    background: var(--card-background) !important;
+  }
+  
+  /* إصلاح Labels */
+  .input-group label {
+    color: var(--text-primary) !important;
+  }
+  
+  /* إصلاح أزرار الحجز */
+  .book-btn,
+  .booking-btn {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+  }
+  
+  .book-btn:hover,
+  .booking-btn:hover {
+    background: var(--color-accent-dark) !important;
+    color: var(--color-primary) !important;
+  }
+  
+  .book-btn:disabled {
+    background: #404040 !important;
+    color: var(--text-muted) !important;
+  }
+  
+  /* إصلاح ملخص السعر */
+  .price-summary {
+    background: var(--background-main) !important;
+    border-color: var(--color-accent) !important;
+  }
+  
+  .price-row span:first-child {
+    color: var(--text-secondary) !important;
+  }
+  
+  .price-amount {
+    color: var(--color-accent) !important;
+  }
+  
+  /* إصلاح بطاقات الخدمة في الحجز */
+  .service-option .service-card {
+    background: var(--background-main) !important;
+    border: 2px solid #404040 !important;
+  }
+  
+  .service-option input[type="radio"]:checked + .service-card {
+    border-color: var(--color-accent) !important;
+    background: var(--card-background) !important;
+  }
+  
+  .service-info h4 {
+    color: var(--text-primary) !important;
+  }
+  
+  .service-price {
+    color: var(--color-accent) !important;
+  }
+  
+  /* إصلاح معلومات العامل */
+  .worker-info-section {
+    background: var(--background-main) !important;
+    border-color: var(--color-accent) !important;
+  }
+  
+  .worker-details h3 {
+    color: var(--text-primary) !important;
+  }
+  
+  .worker-phone,
+  .worker-rating {
+    color: var(--text-secondary) !important;
+  }
+  
+  .worker-rating i {
+    color: var(--color-accent) !important;
+  }
+  
+  /* إصلاح بطاقات الإحصائيات */
+  .rating-text {
+    color: var(--text-secondary) !important;
+  }
+  
+  /* إصلاح التخصصات */
+  .specialty-tag {
+    background: var(--background-main) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--color-accent) !important;
+  }
+  
+  .specialty-tag:hover {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+  }
+  
+  /* إصلاح شارات الحالة */
+  .availability-badge.available {
+    background: rgba(102, 187, 106, 0.2) !important;
+    color: var(--color-success) !important;
+    border-color: var(--color-success) !important;
+  }
+  
+  .availability-badge.unavailable {
+    background: rgba(239, 83, 80, 0.2) !important;
+    color: var(--color-error) !important;
+    border-color: var(--color-error) !important;
+  }
+  
+  /* إصلاح عناصر التفاصيل */
+  .detail-item {
+    background: var(--background-main) !important;
+    color: var(--text-secondary) !important;
+  }
+  
+  .detail-item:hover {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+  }
+  
+  .detail-item i {
+    color: var(--color-accent) !important;
+  }
+  
+  .detail-item:hover i {
+    color: var(--color-primary) !important;
+  }
+  
+  .detail-item strong {
+    color: var(--text-primary) !important;
+  }
+  
+  .detail-item:hover strong {
+    color: var(--color-primary) !important;
+  }
+  
+  /* إصلاح الجسم الرئيسي */
+  body {
+    background: var(--background-main) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .home-page {
+    background: var(--card-background) !important;
+  }
+  
+  .workers-page,
+  .booking-page {
+    background: var(--background-gradient) !important;
+  }
+}
