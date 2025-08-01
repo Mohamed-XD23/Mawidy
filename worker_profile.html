@@ -11,42 +11,41 @@
 </head>
 <body>
   <div class="profile-container">
-    <!-- معلومات الحلاق -->
-    <div class="card">
-      <img id="worker-photo" class="worker-photo" src="img/default-avatar.png" alt="Barber" />
+
+    <!-- بطاقة الحلاق فقط -->
+    <div class="card" id="profile-card">
+      <img id="worker-photo" class="worker-photo" src="img/default-avatar.svg" alt="Barber" loading="lazy" />
       <h2 id="worker-name">اسم الحلاق</h2>
       <p id="worker-phone">رقم الهاتف</p>
       <p id="worker-bio" class="bio">نبذة عن الحلاق</p>
       <p id="worker-status" class="worker-status">الحالة: <span>غير متوفر</span></p>
-      <p><strong>التقييم:</strong> <span id="worker-rating">0.0</span> ⭐</p>
+      <div class="worker-rating-section">
+        <strong>التقييم:</strong>
+        <div id="worker-rating" class="rating-display-container"></div>
+      </div>
       <button id="bookNowBtn" class="btn primary-btn">احجز الآن</button>
     </div>
 
     <!-- التقييمات -->
     <div class="reviews-section">
       <h3>آراء العملاء</h3>
-      <div id="reviews-list">
-        <!-- سيتم توليد التقييمات ديناميكيًا -->
-      </div>
+      <div id="reviews-list"><!-- يُملأ ديناميكيًا --></div>
 
       <form id="review-form">
         <textarea id="review-text" placeholder="اكتب تعليقك هنا..." required></textarea>
-        <select id="review-rating" required>
-          <option value="">اختر تقييم</option>
-          <option value="1">⭐</option>
-          <option value="2">⭐⭐</option>
-          <option value="3">⭐⭐⭐</option>
-          <option value="4">⭐⭐⭐⭐</option>
-          <option value="5">⭐⭐⭐⭐⭐</option>
-        </select>
+        <div class="rating-input-section">
+          <label>اختر تقييمك:</label>
+          <div id="review-rating-stars" class="rating-input-container"></div>
+        </div>
         <button type="submit" class="btn primary-btn">إرسال</button>
       </form>
     </div>
+
   </div>
 
-  <!-- Snackbar for notifications -->
   <div id="snackbar"></div>
 
+  <script type="module" src="js/utils.js"></script>
   <script type="module" src="js/firebase-config.js"></script>
   <script type="module" src="js/worker_profile.js"></script>
 </body>

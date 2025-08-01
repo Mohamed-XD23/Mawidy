@@ -23,7 +23,6 @@
   
   /* إصلاح الأزرار في الوضع المظلم */
   .btn.primary-btn {
-    background: var(--color-accent) !important;
     color: var(--color-primary) !important;
     border: 2px solid var(--color-accent) !important;
   }
@@ -122,6 +121,7 @@
   
   .service-card:hover {
     border-color: var(--color-accent) !important;
+    background-color: var(--background-main) ;
   }
   
   .service-title {
@@ -441,5 +441,70 @@
   .workers-page,
   .booking-page {
     background: var(--background-gradient) !important;
+  }
+  
+  /* إصلاح Modal في الوضع الداكن */
+  .modal-overlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+  
+  .modal-content {
+    background: var(--card-background) !important;
+    border: 2px solid #404040 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  .modal-title {
+    color: var(--text-primary) !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  .modal-message {
+    color: var(--text-secondary) !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  .modal-icon.success {
+    background: var(--color-success) !important;
+    color: white !important;
+  }
+  
+  .modal-icon.error {
+    background: var(--color-error) !important;
+    color: white !important;
+  }
+  
+  .modal-icon.warning {
+    background: var(--color-warning) !important;
+    color: var(--color-primary) !important;
+  }
+  
+  .modal-icon.info {
+    background: var(--card-background) !important;
+    color: var(--color-primary) !important;
+    border-color: var(--color-accent) !important;
+  }
+  
+  .modal-btn.primary {
+    border-color: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+  }
+  
+  .modal-btn.primary:hover {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+  }
+  
+  .modal-btn.secondary {
+    border-color: var(--color-accent) !important;
+    color: var(--color-accent) !important;
+  }
+  
+  .modal-btn.secondary:hover {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
   }
 }

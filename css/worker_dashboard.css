@@ -135,10 +135,16 @@
 
 /* Enhanced Statistics Cards */
 .stats-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
+    display: flex;
+    /* grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); */
+    gap: 24px;
+    margin-bottom: 32px;
+    align-content: center;
+    justify-content: center;
+    align-items: baseline;
+    justify-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .stat-card {

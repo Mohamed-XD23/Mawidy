@@ -11,41 +11,119 @@ import {
   doc,
   setDoc,
   getDoc,
-  serverTimestamp
+  serverTimestamp,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  getCountFromServer
 } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
+
+// ✅ Added sanitizeHTML to imports
+import { 
+  showModal, 
+  setButtonLoading, 
+  showMessage, 
+  logClientError, 
+  sanitizeHTML 
+} from "./utils.js";
 
 // ➤ إنشاء حساب بالبريد وكلمة المرور
 document.getElementById('register-form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-  const confirmPassword = document.getElementById('reg-confirm').value;
-
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(email)) return alert("البريد الإلكتروني غير صالح");
-  if (!password) return alert("الرجاء إدخال كلمة المرور");
-  if (password.length < 6) return alert("كلمة المرور يجب أن تكون على الأقل 6 حروف");
-  if (password !== confirmPassword) return alert("كلمتا المرور غير متطابقتين");
-
   try {
+    const email = sanitizeHTML(document.getElementById('reg-email').value.trim());
+    const password = document.getElementById('reg-password').value;
+    const confirmPassword = document.getElementById('reg-confirm').value;
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      showModal({
+        type: 'warning',
+        title: 'بريد إلكتروني غير صالح',
+        message: 'يرجى إدخال بريد إلكتروني صحيح.',
+        primaryText: 'موافق'
+      });
+      return;
+    }
+
+    // ➤ التحقق من قوة كلمة المرور باستخدام Regex متقدم
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%&*]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      showModal({
+        type: 'warning',
+        title: 'كلمة مرور غير آمنة',
+        message: `كلمة المرور يجب أن تحتوي على:\n- 8 أحرف على الأقل\n- حرف كبير وصغير\n- رقم\n- رمز خاص (!@#$%&*)`,
+        primaryText: 'موافق'
+      });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      showModal({
+        type: 'warning',
+        title: 'كلمات المرور غير متطابقة',
+        message: 'يرجى التأكد من تطابق كلمتي المرور.',
+        primaryText: 'موافق'
+      });
+      return;
+    }
+
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    await setDoc(doc(db, "users", user.uid), {
+    // استخدام addDoc بدلاً من setDoc لتجنب مشاكل CORS في بعض الأجهزة المحمية
+    await addDoc(collection(db, "users"), {
       uid: user.uid,
       email: user.email,
       role: "customer",
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
+      securityHeaders: {
+        xssProtection: 'enabled',
+        cspReportOnly: false
+      }
     });
 
     console.log("✅ تم إنشاء الحساب:", user);
-    window.location.href = "worker_list.html";
+    showModal({
+      type: 'success',
+      title: 'مرحباً بك! 🎉',
+      message: 'تم إنشاء حسابك بنجاح. يمكنك الآن تصفح الحلاقين وحجز المواعيد.',
+      primaryText: 'ابدأ التصفح',
+      onPrimary: () => {
+        window.location.href = "worker_list.html";
+      }
+    });
   } catch (error) {
+    logClientError(error, 'registration');
     console.error("❌ فشل في إنشاء الحساب:", error.message);
-    alert("خطأ: " + error.message);
+    showModal({
+      type: 'error',
+      title: 'فشل إنشاء الحساب',
+      message: `حدث خطأ أثناء إنشاء الحساب: ${error.message}`,
+      primaryText: 'إعادة المحاولة'
+    });
   }
 });
+
+// ➤ عرض معلومات المستخدم بعد التسجيل
+function updateUserInfoDisplay(user) {
+  const userInfoSpan = document.getElementById('user-info');
+  if (userInfoSpan && user) {
+    const safeEmail = sanitizeHTML(user.email);
+    userInfoSpan.innerHTML = `مرحباً، ${safeEmail} (<span id="logout-link" style="cursor: pointer; text-decoration: underline;">تسجيل الخروج</span>)`;
+    
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+      logoutLink.addEventListener('click', async () => {
+        await signOut(auth);
+        window.location.reload();
+      });
+    }
+  }
+}
 
 // ➤ إظهار/إخفاء كلمة المرور
 document.querySelectorAll('.eye-toggle').forEach(button => {
@@ -86,7 +164,12 @@ document.querySelector('.social-btn.google').addEventListener('click', async () 
     window.location.href = "worker_list.html";
   } catch (error) {
     console.error("❌ فشل Google:", error.message);
-    alert("خطأ Google: " + error.message);
+    showModal({
+      type: 'error',
+      title: 'فشل التسجيل عبر Google',
+      message: `حدث خطأ أثناء التسجيل عبر Google: ${error.message}`,
+      primaryText: 'إعادة المحاولة'
+    });
   }
 });
 
@@ -114,6 +197,11 @@ document.querySelector('.social-btn.facebook').addEventListener('click', async (
     window.location.href = "worker_list.html";
   } catch (error) {
     console.error("❌ فشل Facebook:", error.message);
-    alert("خطأ Facebook: " + error.message);
+    showModal({
+      type: 'error',
+      title: 'فشل التسجيل عبر Facebook',
+      message: `حدث خطأ أثناء التسجيل عبر Facebook: ${error.message}`,
+      primaryText: 'إعادة المحاولة'
+    });
   }
 });

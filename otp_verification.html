@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/dark-mode-fix.css" />
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script type="module" src="js/utils.js"></script>
 </head>
 
 <body>
@@ -59,7 +60,9 @@
   </div>
 
   <script type="module" src="js/firebase-config.js"></script>
-  <script>
+  <script type="module">
+    import { showModal } from './js/utils.js'; // استيراد showModal
+
     // Enhanced OTP Input handling
     const otpInputs = document.querySelectorAll('.otp-input');
     const resendBtn = document.getElementById('resend-otp');
@@ -150,7 +153,12 @@
         console.log('OTP submitted:', otp);
         // Add your verification logic here
       } else {
-        alert('الرجاء إدخال الرمز كاملاً');
+        showModal({
+          type: 'warning',
+          title: 'رمز غير كامل',
+          message: 'الرجاء إدخال الرمز المكون من 6 أرقام كاملاً.',
+          primaryText: 'موافق'
+        });
       }
     });
     

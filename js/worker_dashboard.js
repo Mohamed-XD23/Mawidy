@@ -11,8 +11,9 @@ import {
   getDocs, 
   doc, 
   updateDoc,
-  orderBy 
+  orderBy
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { showModal, showAppointmentsSkeleton, setButtonLoading, showMessage } from "./utils.js"; // إضافة showMessage
 
 // عناصر DOM
 const appointmentsList = document.getElementById("appointments-list");
@@ -26,6 +27,13 @@ const modalTitle = document.getElementById("modal-title");
 const modalMessage = document.getElementById("modal-message");
 const confirmActionBtn = document.getElementById("confirm-action");
 const cancelActionBtn = document.getElementById("cancel-action");
+const workerLanguagesDisplay = document.getElementById("worker-languages"),
+      workerExperienceDisplay = document.getElementById("worker-experience"),
+      workerEducationDisplay = document.getElementById("worker-education"),
+      workerCertificationsDisplay = document.getElementById("worker-certifications"),
+      workerAwardsDisplay = document.getElementById("worker-awards"),
+      workerPortfolioDisplay = document.getElementById("worker-portfolio"),
+      workerTestimonialsDisplay = document.getElementById("worker-testimonials");
 
 // متغيرات عامة
 let allAppointments = [];
@@ -35,8 +43,19 @@ let pendingAction = null;
 // ✅ التحقق من تسجيل الدخول وتحميل البيانات
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    alert("يجب تسجيل الدخول أولاً");
-    window.location.href = "login.html";
+    // ➤ إعادة التوجيه للصفحة الرئيسية إذا كان المستخدم غير مسجل الدخول
+    showModal({
+      type: 'warning',
+      title: 'تسجيل الدخول مطلوب',
+      message: 'يجب تسجيل الدخول أولاً للوصول إلى لوحة التحكم.',
+      primaryText: 'تسجيل الدخول',
+      onPrimary: () => window.location.href = "login.html"
+    });
+    
+    // ➤ إضافة إعادة التوجيه الإجبارية بعد فترة قصيرة
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 3000);
     return;
   }
   
@@ -48,12 +67,8 @@ onAuthStateChanged(auth, async (user) => {
 // ✅ تحميل المواعيد من Firebase
 async function loadAppointments() {
   try {
-    appointmentsList.innerHTML = `
-      <div class="loading">
-        <i class="fas fa-spinner fa-spin"></i>
-        جارٍ تحميل المواعيد...
-      </div>
-    `;
+    // عرض skeleton loading للمواعيد
+    showAppointmentsSkeleton(appointmentsList, 4);
 
     const q = query(
       collection(db, "Appointments"),
@@ -77,13 +92,9 @@ async function loadAppointments() {
     
   } catch (error) {
     console.error("خطأ في تحميل المواعيد:", error);
-    appointmentsList.innerHTML = `
-      <div class="empty-state">
-        <i class="fas fa-exclamation-triangle"></i>
-        <h3>حدث خطأ في تحميل البيانات</h3>
-        <p>يرجى المحاولة مرة أخرى</p>
-      </div>
-    `;
+    // استخدام showMessage بدلاً من إضافة HTML يدوي
+    showMessage('حدث خطأ في تحميل البيانات. يرجى المحاولة مرة أخرى.', 'error', 'خطأ');
+    appointmentsList.innerHTML = ""; // مسح أي محتوى سابق
   }
 }
 
@@ -199,68 +210,84 @@ function setupEventListeners() {
   refreshBtn.addEventListener("click", loadAppointments);
   logoutBtn.addEventListener("click", handleLogout);
   
-  // نافذة التأكيد
-  confirmActionBtn.addEventListener("click", executeAction);
-  cancelActionBtn.addEventListener("click", closeModal);
-  
-  // إغلاق النافذة بالنقر خارجها
-  confirmationModal.addEventListener("click", (e) => {
+  // نافذة التأكيد (المودال الجديدة هي showModal)
+  // يجب إزالة مستمعي الأحداث من المودال القديمة إذا كانت لا تزال موجودة في HTML
+  if(confirmActionBtn) confirmActionBtn.removeEventListener("click", executeAction);
+  if(cancelActionBtn) cancelActionBtn.removeEventListener("click", closeModal);
+  if(confirmationModal) confirmationModal.removeEventListener("click", (e) => {
     if (e.target === confirmationModal) {
       closeModal();
     }
   });
+
+  // استخدام showModal الجديدة للإغلاق
+  // closeModal is now globally available from utils.js
 }
 
 // ✅ معالجة إجراءات المواعيد
 function handleAppointmentAction(e) {
-  if (e.target.classList.contains("accept-btn") || e.target.classList.contains("reject-btn")) {
+  if (e.target.classList.contains("action-btn")) { // تعديل للتحقق من أي زر إجراء
     const appointmentId = e.target.getAttribute("data-id");
     const action = e.target.getAttribute("data-action");
     const appointment = allAppointments.find(app => app.id === appointmentId);
     
     if (!appointment) return;
     
+    // إضافة loading للزر المضغوط
+    const clickedButton = e.target;
+    const loader = setButtonLoading(clickedButton, "جارٍ المعالجة...");
+    
+    // تخزين الإجراء والزر للاستخدام لاحقاً في executeAction
     pendingAction = {
       appointmentId,
       action,
-      appointment
+      appointment,
+      buttonLoader: loader
     };
     
-    showConfirmationModal(action, appointment);
+    // عرض نافذة التأكيد باستخدام showModal
+    const isAccept = action === "accept";
+    showModal({
+      type: isAccept ? 'info' : 'warning',
+      title: isAccept ? "تأكيد الموعد" : "رفض الموعد",
+      message: `هل أنت متأكد من ${isAccept ? "تأكيد" : "رفض"} موعد العميل ${appointment.clientName}؟
+
+تفاصيل الموعد:
+• الخدمة: ${appointment.service}
+• التاريخ: ${formatDate(appointment.date)}
+• الوقت: ${formatTime(appointment.time)}`,
+      primaryText: isAccept ? "تأكيد الموعد" : "رفض الموعد",
+      secondaryText: "إلغاء",
+      onPrimary: () => executeAction(appointmentId, action), // استدعاء executeAction عند التأكيد
+      onSecondary: () => {
+        console.log('تم إلغاء العملية');
+        // إيقاف loading الزر الأصلي إذا ألغى المستخدم
+        if (pendingAction && pendingAction.buttonLoader) {
+           pendingAction.buttonLoader.stop();
+        }
+        pendingAction = null; // مسح الإجراء المعلق
+      }
+    });
   }
 }
 
-// ✅ عرض نافذة التأكيد
-function showConfirmationModal(action, appointment) {
-  const isAccept = action === "accept";
-  
-  modalTitle.textContent = isAccept ? "تأكيد الموعد" : "رفض الموعد";
-  modalMessage.innerHTML = `
-    هل أنت متأكد من ${isAccept ? "تأكيد" : "رفض"} موعد العميل <strong>${appointment.clientName}</strong>؟
-    <br><br>
-    <strong>تفاصيل الموعد:</strong><br>
-    الخدمة: ${appointment.service}<br>
-    التاريخ: ${formatDate(appointment.date)}<br>
-    الوقت: ${formatTime(appointment.time)}
-  `;
-  
-  confirmActionBtn.textContent = isAccept ? "تأكيد الموعد" : "رفض الموعد";
-  confirmActionBtn.className = `btn ${isAccept ? "primary-btn" : "danger-btn"}`;
-  
-  confirmationModal.style.display = "block";
-}
-
 // ✅ تنفيذ الإجراء
-async function executeAction() {
-  if (!pendingAction) return;
-  
-  const { appointmentId, action } = pendingAction;
+async function executeAction(appointmentId, action) {
+  // لا حاجة لتحديث نص الزر هنا، loading يتم إدارته في handleAppointmentAction
+  // ولا حاجة لتعطيل الأزرار هنا أيضاً.
+
+  if (!appointmentId || !action) {
+     // إيقاف loading الزر الأصلي في حالة وجود خطأ غير متوقع
+    if (pendingAction && pendingAction.buttonLoader) {
+       pendingAction.buttonLoader.stop();
+    }
+    pendingAction = null;
+    return;
+  }
+
   const newStatus = action === "accept" ? "تم التأكيد" : "مرفوض";
   
   try {
-    confirmActionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ التحديث...';
-    confirmActionBtn.disabled = true;
-    
     await updateDoc(doc(db, "Appointments", appointmentId), {
       status: newStatus
     });
@@ -271,28 +298,37 @@ async function executeAction() {
       allAppointments[appointmentIndex].status = newStatus;
     }
     
-    closeModal();
+    // closeModal(); // showModal تقوم بالإغلاق تلقائياً بعد onPrimary
     updateStats();
     displayAppointments(getFilteredAppointments());
     
-    showNotification(
-      action === "accept" ? "تم تأكيد الموعد بنجاح" : "تم رفض الموعد بنجاح",
-      "success"
+    showMessage(
+      action === "accept" ? 
+        "تم تأكيد الموعد بنجاح. سيتم إشعار العميل بالتأكيد." :
+        "تم رفض الموعد. سيتم إشعار العميل بالرفض.",
+      'success', // استخدام نوع success لرسائل النجاح
+      action === "accept" ? "تم تأكيد الموعد!" : "تم رفض الموعد"
     );
     
   } catch (error) {
     console.error("خطأ في تحديث الموعد:", error);
-    showNotification("حدث خطأ أثناء تحديث الموعد", "error");
+    showMessage('حدث خطأ أثناء تحديث الموعد. يرجى المحاولة مرة أخرى.', 'error', 'خطأ في التحديث');
   } finally {
-    confirmActionBtn.disabled = false;
-    confirmActionBtn.innerHTML = pendingAction.action === "accept" ? "تأكيد الموعد" : "رفض الموعد";
+    // إيقاف loading الزر الأصلي بعد انتهاء العملية (سواء نجحت أو فشلت)
+    if (pendingAction && pendingAction.buttonLoader) {
+      pendingAction.buttonLoader.stop();
+    }
+    pendingAction = null; // مسح الإجراء المعلق
   }
 }
 
-// ✅ إغلاق نافذة التأكيد
+// ✅ إغلاق نافذة التأكيد (هذه الدالة لم تعد تستخدم المودال القديمة مباشرة)
+// يمكن إزالة هذه الدالة إذا لم يتم استدعاؤها من أي مكان آخر
+// أو تحديثها لاستدعاء closeModal() العامة إذا كانت لا تزال ضرورية لإغلاق المودال القديمة
+// بناءً على المراجعة الأولية، يبدو أن المودال القديمة في HTML يمكن إزالتها.
+// للحفاظ على التوافق إذا كانت هناك استدعاءات أخرى غير معروفة، سأتركها تستدعي closeModal العامة.
 function closeModal() {
-  confirmationModal.style.display = "none";
-  pendingAction = null;
+   window.closeModal(); // استدعاء closeModal العامة من utils.js
 }
 
 // ✅ تطبيق الفلاتر
@@ -331,14 +367,15 @@ function clearFilters() {
 async function handleLogout() {
   try {
     await signOut(auth);
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   } catch (error) {
     console.error("خطأ في تسجيل الخروج:", error);
-    showNotification("حدث خطأ أثناء تسجيل الخروج", "error");
-  }
+    // استخدام showMessage بدلاً من showNotification
+    showMessage('حدث خطأ أثناء تسجيل الخروج. يرجى المحاولة مرة أخرى.', 'error', 'فشل تسجيل الخروج');
+  }handleLogout
 }
 
-// ✅ دوال مساعدة
+// ✅ دوال مساعدة (لا تستخدم آليات رسائل غير موحدة)
 
 function getStatusClass(status) {
   switch (status) {
@@ -384,47 +421,18 @@ function formatCreatedAt(timestamp) {
   });
 }
 
+// تم استبدال showNotification بدالة showMessage من utils.js
+// يمكن إزالة تعريف دالة showNotification هنا إذا لم يتم استخدامها في أي مكان آخر.
+// للحفاظ على التوافق إذا كانت هناك استدعاءات أخرى غير معروفة، سأتركها حالياً مع رسالة تحذير.
 function showNotification(message, type = "info") {
-  // إنشاء عنصر الإشعار
-  const notification = document.createElement("div");
-  notification.className = `notification ${type}`;
-  notification.innerHTML = `
-    <i class="fas fa-${type === "success" ? "check-circle" : type === "error" ? "exclamation-circle" : "info-circle"}"></i>
-    ${message}
-  `;
-  
-  // إضافة التنسيقات
-  notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: ${type === "success" ? "#28a745" : type === "error" ? "#dc3545" : "#17a2b8"};
-    color: white;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    z-index: 1001;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
-    animation: slideIn 0.3s ease;
-  `;
-  
-  document.body.appendChild(notification);
-  
-  // إزالة الإشعار بعد 3 ثوان
-  setTimeout(() => {
-    notification.style.animation = "slideOut 0.3s ease";
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 300);
-  }, 3000);
+  console.warn("⚠️ تم استدعاء showNotification قديمة. استخدم showModal أو showMessage بدلاً منها.");
+  showMessage(message, type);
 }
 
-// إضافة تنسيقات الحركة للإشعارات
+// إزالة تنسيقات الحركة الخاصة بالإشعارات القديمة إذا لم تعد ضرورية
+// يمكن إبقاء هذا الكود إذا كانت التنسيقات تستخدم لأغراض أخرى.
+// بناءً على المراجعة، يبدو أنها خاصة بـ showNotification ويمكن إزالتها.
+// للتأكد، سأتركها حالياً.
 const style = document.createElement("style");
 style.textContent = `
   @keyframes slideIn {

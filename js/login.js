@@ -12,6 +12,7 @@ import {
   setDoc,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { showModal } from "./utils.js";
 
 // ⬇️ تسجيل الدخول بالبريد وكلمة المرور
 document.getElementById("login-form").addEventListener("submit", async (e) => {
@@ -21,7 +22,12 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   const password = document.getElementById("password").value;
 
   if (!email || !password) {
-    alert("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+    showModal({
+      type: 'warning',
+      title: 'بيانات مطلوبة',
+      message: 'يرجى إدخال البريد الإلكتروني وكلمة المرور.',
+      primaryText: 'موافق'
+    });
     return;
   }
 
@@ -36,7 +42,12 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     window.location.href = "worker_list.html";
   } catch (error) {
     console.error("❌ خطأ في تسجيل الدخول:", error.message);
-    alert("فشل تسجيل الدخول: " + error.message);
+    showModal({
+      type: 'error',
+      title: 'فشل تسجيل الدخول',
+      message: `حدث خطأ أثناء تسجيل الدخول: ${error.message}`,
+      primaryText: 'إعادة المحاولة'
+    });
   }
 });
 
@@ -66,29 +77,50 @@ document
       const isNewUser = result._tokenResponse?.isNewUser;
 
       if (isNewUser) {
-        const confirmCreate = window.confirm(
-          "هذا أول تسجيل دخول لك باستخدام Google، هل تريد إنشاء حساب جديد؟"
-        );
-        if (confirmCreate) {
-          alert("تم إنشاء حساب جديد بنجاح");
-          window.location.href = "worker_list.html";
-          // بعد تأكيد الإنشاء:
-          await setDoc(doc(db, "users", user.uid), {
-            uid: user.uid,
-            email: user.email,
-            role: "customer",
-            createdAt: serverTimestamp(),
-          });
-        } else {
-          await user.delete();
-          alert("تم إلغاء العملية ولم يتم إنشاء حساب.");
-        }
+        showModal({
+          type: 'info',
+          title: 'إنشاء حساب جديد',
+          message: 'هذا أول تسجيل دخول لك باستخدام Google، هل تريد إنشاء حساب جديد؟',
+          primaryText: 'نعم، أنشئ حساب',
+          secondaryText: 'إلغاء',
+          onPrimary: async () => {
+            await setDoc(doc(db, "users", user.uid), {
+              uid: user.uid,
+              email: user.email,
+              role: "customer",
+              createdAt: serverTimestamp(),
+            });
+            showModal({
+              type: 'success',
+              title: 'مرحباً بك! 🎉',
+              message: 'تم إنشاء حسابك الجديد بنجاح. يمكنك الآن تصفح الحلاقين وحجز المواعيد.',
+              primaryText: 'ابدأ التصفح',
+              onPrimary: () => {
+                window.location.href = "worker_list.html";
+              }
+            });
+          },
+          onSecondary: async () => {
+            await user.delete();
+            showModal({
+              type: 'info',
+              title: 'تم الإلغاء',
+              message: 'تم إلغاء العملية ولم يتم إنشاء حساب.',
+              primaryText: 'موافق'
+            });
+          }
+        });
       } else {
         window.location.href = "worker_list.html";
       }
     } catch (error) {
       console.error("❌ فشل تسجيل الدخول عبر Google:", error.message);
-      alert("فشل تسجيل الدخول عبر Google: " + error.message);
+      showModal({
+        type: 'error',
+        title: 'فشل تسجيل الدخول',
+        message: `حدث خطأ أثناء تسجيل الدخول عبر Google: ${error.message}`,
+        primaryText: 'إعادة المحاولة'
+      });
     }
   });
 
@@ -104,28 +136,66 @@ document
       const isNewUser = result._tokenResponse?.isNewUser;
 
       if (isNewUser) {
-        const confirmCreate = window.confirm(
-          "هذا أول تسجيل دخول لك باستخدام Facebook، هل تريد إنشاء حساب جديد؟"
-        );
-        if (confirmCreate) {
-          alert("تم إنشاء حساب جديد بنجاح");
-          window.location.href = "worker_list.html";
-          // بعد تأكيد الإنشاء:
-          await setDoc(doc(db, "users", user.uid), {
-            uid: user.uid,
-            email: user.email,
-            role: "customer",
-            createdAt: serverTimestamp(),
-          });
-        } else {
-          await user.delete();
-          alert("تم إلغاء العملية ولم يتم إنشاء حساب.");
-        }
+        showModal({
+          type: 'info',
+          title: 'إنشاء حساب جديد',
+          message: 'هذا أول تسجيل دخول لك باستخدام Facebook، هل تريد إنشاء حساب جديد؟',
+          primaryText: 'نعم، أنشئ حساب',
+          secondaryText: 'إلغاء',
+          onPrimary: async () => {
+            await setDoc(doc(db, "users", user.uid), {
+              uid: user.uid,
+              email: user.email,
+              role: "customer",
+              createdAt: serverTimestamp(),
+            });
+            showModal({
+              type: 'success',
+              title: 'مرحباً بك! 🎉',
+              message: 'تم إنشاء حسابك الجديد بنجاح. يمكنك الآن تصفح الحلاقين وحجز المواعيد.',
+              primaryText: 'ابدأ التصفح',
+              onPrimary: () => {
+                window.location.href = "worker_list.html";
+              }
+            });
+          },
+          onSecondary: async () => {
+            await user.delete();
+            showModal({
+              type: 'info',
+              title: 'تم الإلغاء',
+              message: 'تم إلغاء العملية ولم يتم إنشاء حساب.',
+              primaryText: 'موافق'
+            });
+          }
+        });
       } else {
         window.location.href = "worker_list.html";
       }
     } catch (error) {
-      console.error("❌ فشل تسجيل الدخول عبر Facebook:", error.message);
-      alert("فشل تسجيل الدخول عبر Facebook: " + error.message);
+      console.error("❌ خطأ في تسجيل الدخول عبر Facebook:", error.message);
+      showModal({
+        type: 'error',
+        title: 'فشل تسجيل الدخول',
+        message: `حدث خطأ أثناء تسجيل الدخول عبر Facebook: ${error.message}`,
+        primaryText: 'إعادة المحاولة'
+      });
     }
   });
+
+// ➤ عرض معلومات المستخدم بعد تسجيل الدخول
+function updateUserInfoDisplay(user) {
+  const userInfoSpan = document.getElementById('user-info');
+  if (userInfoSpan && user) {
+    const safeEmail = sanitizeHTML(user.email);
+    userInfoSpan.innerHTML = `مرحباً، ${safeEmail} (<span id="logout-link" style="cursor: pointer; text-decoration: underline;">تسجيل الخروج</span>)`;
+    
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+      logoutLink.addEventListener('click', async () => {
+        await signOut(auth);
+        window.location.reload();
+      });
+    }
+  }
+}

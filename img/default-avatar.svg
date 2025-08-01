@@ -1,0 +1,21 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="60" cy="60" r="60" fill="#f0f0f0"/>
+  
+  <!-- Person Icon -->
+  <g transform="translate(30, 25)">
+    <!-- Head -->
+    <circle cx="30" cy="25" r="15" fill="#d0d0d0"/>
+    
+    <!-- Body -->
+    <path d="M10 70 Q10 50 30 50 Q50 50 50 70 L50 85 L10 85 Z" fill="#d0d0d0"/>
+  </g>
+  
+  <!-- Barber Tools (Optional) -->
+  <g transform="translate(85, 15)" opacity="0.6">
+    <!-- Scissors -->
+    <path d="M2 2 L8 8 M8 2 L2 8" stroke="#999" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="2" cy="2" r="1.5" fill="none" stroke="#999" stroke-width="1"/>
+    <circle cx="8" cy="8" r="1.5" fill="none" stroke="#999" stroke-width="1"/>
+  </g>
+</svg>

@@ -8,7 +8,6 @@
 .btn.primary-btn,
 .booking-btn,
 .book-btn {
-  background: var(--color-accent) !important;
   color: var(--color-primary) !important;
   font-weight: 600 !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
@@ -26,7 +25,6 @@
 /* تحسين الأزرار مع الخلفية المتدرجة */
 .btn.primary-btn,
 .booking-form .btn-primary {
-  background: var(--color-accent) !important;
   color: var(--color-primary) !important;
   border: 2px solid var(--color-primary) !important;
 }
@@ -82,7 +80,6 @@
   .booking-btn,
   .book-btn,
   .edit-btn {
-    background: var(--color-accent) !important;
     color: var(--color-primary) !important;
     border: 2px solid var(--color-primary) !important;
     font-weight: 700 !important;
@@ -104,7 +101,6 @@
 .hero-buttons .btn.primary-btn,
 .service-card .btn.primary-btn,
 .worker-card .btn.primary-btn {
-  background: var(--color-accent) !important;
   color: var(--color-primary) !important;
   border: 2px solid var(--color-primary) !important;
   font-weight: 700 !important;
@@ -139,4 +135,57 @@
 .book-btn * {
   color: var(--color-primary) !important;
   text-shadow: inherit !important;
+}
+
+/* تحسين التباين لأزرار Modal */
+.modal-btn.primary {
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.modal-btn.primary:hover {
+  background: var(--color-accent-dark) !important;
+  color: var(--color-primary) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+.modal-btn.secondary {
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+}
+
+.modal-btn.secondary:hover {
+  background: var(--color-primary) !important;
+  color: var(--card-background) !important;
+}
+
+/* تحسين التباين في الوضع الداكن للـ Modal */
+@media (prefers-color-scheme: dark) {
+  .modal-btn.primary {
+    color: var(--color-primary) !important;
+    border: 2px solid var(--color-accent) !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .modal-btn.primary:hover {
+    background: var(--color-accent-dark) !important;
+    color: var(--color-primary) !important;
+    border-color: var(--color-accent) !important;
+  }
+  
+  .modal-btn.secondary {
+    color: var(--color-accent) !important;
+    border: 2px solid var(--color-accent) !important;
+    font-weight: 700 !important;
+  }
+  
+  .modal-btn.secondary:hover {
+    background: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+    border-color: var(--color-accent) !important;
+  }
 }

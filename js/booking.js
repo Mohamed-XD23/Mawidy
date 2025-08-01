@@ -8,9 +8,11 @@ import {
   getDoc,
   query,
   where,
-  getDocs
+  getDocs,
+  getCountFromServer
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { setButtonLoading, showLoadingState, showModal, displayRatingStars, showMessage } from "./utils.js"; // إضافة showMessage وإزالة showSnackbar إذا لم تعد تستخدم مباشرة
 
 const serviceRadios = document.querySelectorAll('input[name="service"]');
 const dateInput = document.getElementById("date");
@@ -20,41 +22,10 @@ const confirmBtn = document.getElementById("confirmBooking");
 
 const selectedWorkerUID = localStorage.getItem("selectedWorkerUID");
 
-// دالة لعرض الرسائل
-function showMessage(message, type = 'info') {
-  const existingMessage = document.querySelector('.message-toast');
-  if (existingMessage) existingMessage.remove();
-  
-  const toast = document.createElement('div');
-  toast.className = `message-toast ${type}`;
-  toast.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 16px 20px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 500;
-    z-index: 1000;
-    animation: slideIn 0.3s ease;
-    max-width: 300px;
-  `;
-  
-  if (type === 'error') {
-    toast.style.background = 'var(--color-secondary)';
-  } else if (type === 'success') {
-    toast.style.background = 'var(--color-success)';
-  } else {
-    toast.style.background = 'var(--color-primary)';
-  }
-  
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  
-  setTimeout(() => toast.remove(), 4000);
-}
+// دالة لعرض الرسائل باستخدام Modal (تم نقلها إلى utils.js واستيرادها)
+// function showMessage(message, type = 'info', title = null) { ... }
 
-// ✅ دالة لحساب التقييم الفعلي للحلاق من مجموعة Reviews
+// ✅ دالة لحساب التقييم الفعلي للحلاق من مجموعة Reviews باستخدام utils
 async function calculateWorkerRating(workerId) {
   try {
     const reviewsRef = collection(db, "Reviews");
@@ -62,27 +33,33 @@ async function calculateWorkerRating(workerId) {
     const reviewsSnap = await getDocs(q);
     
     if (reviewsSnap.empty) {
-      return 0.0; // لا توجد تقييمات
+      return "0.0";
     }
     
-    let totalRating = 0;
-    let reviewCount = 0;
-    
+    let total = 0;
+    let count = 0;
     reviewsSnap.forEach((docSnap) => {
-      const review = docSnap.data();
-      totalRating += review.rating || 0;
-      reviewCount++;
+      const rating = docSnap.data().rating || 0;
+      total += rating;
+      count++;
     });
     
-    return reviewCount > 0 ? (totalRating / reviewCount) : 0.0;
+    return (total / count).toFixed(1);
   } catch (error) {
-    console.error("خطأ في حساب التقييم للحلاق:", workerId, error);
-    return 0.0; // في حالة الخطأ، إرجاع 0
+    console.error("خطأ في حساب التقييم ��لحلاق:", workerId, error);
+    return "0.0";
   }
 }
 
-// ✅ دالة تحميل معلومات الحلاق
+// ✅ دالة تحميل معلومات الحلاق مع Loading Indicator
 async function loadWorkerInfo() {
+  const workerInfo = document.getElementById("worker-info");
+  
+  // عرض loading state
+  if (workerInfo) {
+    showLoadingState(workerInfo, "جارٍ تحميل معلومات الحلاق...");
+  }
+  
   try {
     const workerDoc = await getDoc(doc(db, "worker", selectedWorkerUID));
     if (workerDoc.exists()) {
@@ -112,7 +89,12 @@ async function loadWorkerInfo() {
       
       // حساب التقييم الفعلي من مجموعة Reviews
       const actualRating = await calculateWorkerRating(selectedWorkerUID);
-      if (workerRatingDisplay) workerRatingDisplay.innerHTML = `<i class="fas fa-star"></i> ${actualRating.toFixed(1)}`;
+      if (workerRatingDisplay) {
+        workerRatingDisplay.innerHTML = `
+          ${displayRatingStars(parseFloat(actualRating))}
+          <span style="margin-right: 8px; color: var(--text-secondary);">(${actualRating})</span>
+        `;
+      }
       
       // إظهار معلومات الحلاق
       if (workerInfo) workerInfo.style.display = "block";
@@ -169,128 +151,60 @@ onAuthStateChanged(auth, (user) => {
 // ✅ تأكيد الحجز
 document.getElementById("booking-form").addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const user = auth.currentUser;
-  if (!user) return showMessage("يجب تسجيل الدخول لإتمام الحجز", 'error');
-
-  const selectedService = document.querySelector('input[name="service"]:checked');
-  const service = selectedService ? selectedService.value : '';
-  const date = dateInput.value;
-  const time = timeInput.value;
-  const price = selectedService ? parseInt(selectedService.dataset.price) : 0;
-
-  if (!service || !date || !time) {
-    return showMessage("يرجى ملء جميع الحقول", 'error');
+  if (!user) {
+    showModal({
+      type: 'warning',
+      title: 'تسجيل الدخول مطلوب',
+      message: 'يجب تسجيل الدخول أولاً لحجز موعد.',
+      primaryText: 'تسجيل الدخول'
+    });
+    setTimeout(() => window.location.href = 'login.html', 2000);
+    return;
   }
 
-  // التحقق من أن التاريخ ليس في الماضي
-  const selectedDate = new Date(date);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  if (selectedDate < today) {
-    return showMessage("لا يمكن حجز موعد في تاريخ سابق", 'error');
-  }
-
-  // إظهار حالة التحميل
-  const originalText = confirmBtn.textContent;
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = "جارٍ التحقق...";
-
+  // ➤ استخدام addDoc (POST-equivalent في Firebase) بدلاً من getDocs للعمليات الحساسة
   try {
-    // ✅ منع الزبون من تكرار الحجز إذا كان لديه طلب قيد الانتظار
-    const q1 = query(
-      collection(db, "Appointments"),
-      where("clientId", "==", user.uid),
-      where("status", "==", "بانتظار التأكيد")
-    );
-    const existing = await getDocs(q1);
-    if (!existing.empty) {
-      const pendingCount = existing.size;
-      const message = pendingCount === 1 
-        ? "لديك بالفعل حجز قيد الانتظار. يرجى الانتظار حتى تتم معالجته."
-        : `لديك ${pendingCount} حجوزات قيد الانتظار. يرجى الانتظار حتى تتم معالجتها.`;
-      
-      showMessage(message, 'error');
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = originalText;
-      return;
-    }
-
-    // ✅ منع تكرار الحجز مع نفس الحلاق في نفس الوقت والتاريخ
-    const q2 = query(
-      collection(db, "Appointments"),
-      where("workerId", "==", selectedWorkerUID),
-      where("date", "==", date),
-      where("time", "==", time),
-      where("status", "in", ["بانتظار التأكيد", "تم التأكيد"])
-    );
-    const conflict = await getDocs(q2);
-    if (!conflict.empty) {
-      alert("هذا الموعد محجوز مسبقًا مع هذا الحلاق. يرجى اختيار وقت مختلف.");
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = originalText;
-      return;
-    }
-
-    // تحديث نص الزر بعد التحققات
-    confirmBtn.textContent = "جارٍ الحفظ...";
-
+    const selectedWorkerUID = localStorage.getItem("selectedWorkerUID");
+    
     await addDoc(collection(db, "Appointments"), {
       clientId: user.uid,
-      clientName: user.displayName || user.email || "عميل",
+      clientName: user.displayName || user.email.split('@')[0],
       workerId: selectedWorkerUID,
       service,
-      price,
       date,
       time,
+      price,
       status: "بانتظار التأكيد",
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
+      // إضافة random ID لتقليل التنبؤ بالبيانات
+      requestId: Math.random().toString(36).substring(2)
     });
 
-    // عرض رسالة تأكيد مفصلة
-    const confirmationMessage = `✅ تم إرسال طلب الحجز بنجاح!
-
-📋 تفاصيل الحجز:
-• الخدمة: ${service}
-• التاريخ: ${date}
-• الوقت: ${time}
-• السعر: ${price} دج
-• الحالة: بانتظار التأكيد
-
-📞 سيتم التواصل معك قريباً لتأكيد الموعد.`;
-    
-    showMessage("تم إرسال طلب الحجز بنجاح! ✅", 'success');
-    
-    // إظهار تفاصيل الحجز
-    setTimeout(() => {
-      showMessage(`الخدمة: ${service} | التاريخ: ${date} | الوقت: ${time}`, 'info');
-    }, 2000);
-    
-    // مسح localStorage بعد الحجز الناجح
-    setTimeout(() => {
-      localStorage.removeItem("selectedWorkerUID");
-      window.location.href = "worker_list.html";
-    }, 4000);
+    // عرض modal تأكيد الحجز
+    showModal({
+      type: 'success',
+      title: 'تم الحجز بنجاح! 🎉',
+      message: `...`,
+      primaryText: 'ممتاز',
+      onPrimary: () => {
+        localStorage.removeItem("selectedWorkerUID");
+        window.location.href = "index.html";
+      }
+    });
   } catch (error) {
-    console.error("خطأ في الحجز:", error);
+    logClientError(error, 'booking-form-submit');
+    console.error("❌ خطأ في الحجز:", error);
     
-    // عرض رسالة خطأ مفصلة حسب نوع الخطأ
-    let errorMessage = "❌ حدث خطأ أثناء الحجز. ";
+    let errorMessage = "حدث خطأ أثناء الحجز. يرجى المحاولة مرة أخرى.";
     
     if (error.code === 'permission-denied') {
-      errorMessage += "ليس لديك صلاحية للوصول لهذه الخدمة.";
+      errorMessage += " ليس لديك صلاحية للوصول لهذه الخدمة.";
     } else if (error.code === 'unavailable') {
-      errorMessage += "الخدمة غير متاحة حالياً. تحقق من اتصالك بالإنترنت.";
-    } else if (error.code === 'failed-precondition') {
-      errorMessage += "فشل في التحقق من الشروط المطلوبة.";
-    } else {
-      errorMessage += "يرجى المحاولة مرة أخرى.";
+      errorMessage += " الخدمة غير متاحة حالياً. تحقق من اتصالك بالإنترنت.";
     }
     
     showMessage(errorMessage, 'error');
-    
-    // إعادة تعيين الزر
-    confirmBtn.disabled = false;
-    confirmBtn.textContent = originalText;
   }
 });
