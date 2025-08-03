@@ -1,18 +1,29 @@
 //login.js
-import { auth } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import { db } from "./firebase-config.js";
 import {
   doc,
+  getDoc,
   setDoc,
-  serverTimestamp,
+  collection,
+  query,
+  where,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-import { showModal } from "./utils.js";
+import { 
+  showModal, 
+  showMessage, 
+  setButtonLoading,
+  updateUserInfoDisplay 
+} from "./utils.js";
+
+// ✅ Firebase imports
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
 
 // ⬇️ تسجيل الدخول بالبريد وكلمة المرور
 document.getElementById("login-form").addEventListener("submit", async (e) => {
@@ -20,7 +31,8 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
 
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
-
+  const submitButton = document.querySelector("#login-form button[type=submit]");
+  
   if (!email || !password) {
     showModal({
       type: 'warning',
@@ -31,23 +43,28 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     return;
   }
 
+  // Show loading indicator
+  const loader = setButtonLoading(submitButton, "جارٍ تسجيل الدخول...");
+  
   try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-    console.log("✅ تم تسجيل الدخول:", user);
-    window.location.href = "worker_list.html";
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    
+    // ➤ التحقق من وجود مستخدم بعد تسجيل الدخول
+    if (user) {
+      showMessage("تم تسجيل الدخول بنجاح!", 'success', 'مرحبًا بك');
+      // ➤ دع auth-check.js يتولى إعادة التوجيه حسب نوع المستخدم
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    }
   } catch (error) {
-    console.error("❌ خطأ في تسجيل الدخول:", error.message);
-    showModal({
-      type: 'error',
-      title: 'فشل تسجيل الدخول',
-      message: `حدث خطأ أثناء تسجيل الدخول: ${error.message}`,
-      primaryText: 'إعادة المحاولة'
-    });
+    console.error("❌ خطأ في تسجيل الدخول:", error);
+    showMessage("فشل تسجيل الدخول. يرجى التأكد من البريد وكلمة المرور والمحاولة مجددًا.", 'error', 'خطأ في تسجيل الدخول');
+  } finally {
+    // Hide loading indicator
+    if (loader && typeof loader.stop === 'function') {
+      loader.stop();
+    }
   }
 });
 
@@ -70,6 +87,10 @@ document
   .querySelector(".social-btn.google")
   .addEventListener("click", async () => {
     const provider = new GoogleAuthProvider();
+    const button = document.querySelector(".social-btn.google");
+    
+    // Show loading indicator
+    const loader = setButtonLoading(button, "جارٍ تسجيل الدخول عبر Google...");
 
     try {
       const result = await signInWithPopup(auth, provider);
@@ -96,7 +117,7 @@ document
               message: 'تم إنشاء حسابك الجديد بنجاح. يمكنك الآن تصفح الحلاقين وحجز المواعيد.',
               primaryText: 'ابدأ التصفح',
               onPrimary: () => {
-                window.location.href = "worker_list.html";
+                window.location.href = "index.html";
               }
             });
           },
@@ -111,16 +132,16 @@ document
           }
         });
       } else {
-        window.location.href = "worker_list.html";
+        window.location.href = "index.html";
       }
     } catch (error) {
-      console.error("❌ فشل تسجيل الدخول عبر Google:", error.message);
-      showModal({
-        type: 'error',
-        title: 'فشل تسجيل الدخول',
-        message: `حدث خطأ أثناء تسجيل الدخول عبر Google: ${error.message}`,
-        primaryText: 'إعادة المحاولة'
-      });
+      console.error("❌ خطأ في تسجيل الدخول عبر Google:", error);
+      showMessage("فشل تسجيل الدخول عبر Google. يرجى المحاولة مرة أخرى.", 'error', 'خطأ في تسجيل الدخول');
+    } finally {
+      // Hide loading indicator
+      if (loader && typeof loader.stop === 'function') {
+        loader.stop();
+      }
     }
   });
 
@@ -129,6 +150,10 @@ document
   .querySelector(".social-btn.facebook")
   .addEventListener("click", async () => {
     const provider = new FacebookAuthProvider();
+    const button = document.querySelector(".social-btn.facebook");
+    
+    // Show loading indicator
+    const loader = setButtonLoading(button, "جارٍ تسجيل الدخول عبر Facebook...");
 
     try {
       const result = await signInWithPopup(auth, provider);
@@ -155,7 +180,7 @@ document
               message: 'تم إنشاء حسابك الجديد بنجاح. يمكنك الآن تصفح الحلاقين وحجز المواعيد.',
               primaryText: 'ابدأ التصفح',
               onPrimary: () => {
-                window.location.href = "worker_list.html";
+                window.location.href = "index.html";
               }
             });
           },
@@ -170,32 +195,15 @@ document
           }
         });
       } else {
-        window.location.href = "worker_list.html";
+        window.location.href = "index.html";
       }
     } catch (error) {
-      console.error("❌ خطأ في تسجيل الدخول عبر Facebook:", error.message);
-      showModal({
-        type: 'error',
-        title: 'فشل تسجيل الدخول',
-        message: `حدث خطأ أثناء تسجيل الدخول عبر Facebook: ${error.message}`,
-        primaryText: 'إعادة المحاولة'
-      });
+      console.error("❌ خطأ في تسجيل الدخول عبر Facebook:", error);
+      showMessage("فشل تسجيل الدخول عبر Facebook. يرجى المحاولة مرة أخرى.", 'error', 'خطأ في تسجيل الدخول');
+    } finally {
+      // Hide loading indicator
+      if (loader && typeof loader.stop === 'function') {
+        loader.stop();
+      }
     }
   });
-
-// ➤ عرض معلومات المستخدم بعد تسجيل الدخول
-function updateUserInfoDisplay(user) {
-  const userInfoSpan = document.getElementById('user-info');
-  if (userInfoSpan && user) {
-    const safeEmail = sanitizeHTML(user.email);
-    userInfoSpan.innerHTML = `مرحباً، ${safeEmail} (<span id="logout-link" style="cursor: pointer; text-decoration: underline;">تسجيل الخروج</span>)`;
-    
-    const logoutLink = document.getElementById('logout-link');
-    if (logoutLink) {
-      logoutLink.addEventListener('click', async () => {
-        await signOut(auth);
-        window.location.reload();
-      });
-    }
-  }
-}

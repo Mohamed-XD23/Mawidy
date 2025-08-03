@@ -1,17 +1,82 @@
 // worker.js
-import { db, auth } from "./firebase-config.js";
+import { db, auth, updateDoc, doc } from "./firebase-config.js";
 import {
   collection,
   getDocs,
   query,
   where,
-  // Removed select as it's not a direct export in this version
+  getDoc,
+  addDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
-import { formatStars, showWorkersSkeleton, setButtonLoading, displayRatingStars, showLoginRegisterModal } from "./utils.js";
 
-let allWorkers = []; // مصفوفة لتخزين جميع الحلاقين
+// Make auth available globally for retry functionality
+window.auth = auth;
+import { formatStars, showWorkersSkeleton, setButtonLoading, displayRatingStars, showLoginRegisterModal, showMessage, sanitizeHTML } from "./utils.js";
 
+let allWorkers = []; // مصفوفة لتخزن جميع الحلاقين
+
+// ✅ تحميل بيانات الحلاقين من قاعدة البيانات
+async function loadWorkers() {
+  const container = document.getElementById("workers-container");
+  const loadingState = document.getElementById("loading-state");
+  const emptyState = document.getElementById("empty-state");
+  
+  try {
+    showWorkersSkeleton(container, 6);
+    
+    // الحصول على بيانات جميع الحلاقين
+    // تعديل الاستعلام ليتوافق مع قواعد الأمان في Firebase
+    const workersRef = collection(db, "users");
+    const q = query(workersRef, where("role", "==", "worker"));
+    const querySnapshot = await getDocs(q);
+    
+    allWorkers = [];
+    querySnapshot.forEach((doc) => {
+      allWorkers.push({ id: doc.id, ...doc.data() });
+    });
+    
+    // تحديث التقييمات الفعلية للحلاقين
+    for (let i = 0; i < allWorkers.length; i++) {
+      const worker = allWorkers[i];
+      // التحقق من أن المستخدم لديه حق الوصول لقراءة التقييمات
+      try {
+        const ratingsRef = collection(db, "users", worker.id, "ratings");
+        const ratingsSnapshot = await getDocs(ratingsRef);
+        
+        let totalRating = 0;
+        let ratingCount = 0;
+        
+        ratingsSnapshot.forEach((doc) => {
+          const ratingData = doc.data();
+          totalRating += ratingData.average;
+          ratingCount++;
+        });
+        
+        worker.actualRating = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : "0.0";
+      } catch (ratingsError) {
+        // في حالة عدم وجود صلاحيات لقراءة التقييمات، نضع قيمة افتراضية
+        console.warn(`لا يمكن قراءة التقييمات للحلاق ${worker.id}:`, ratingsError);
+        worker.actualRating = "0.0";
+      }
+    }
+    
+    // عرض الحلاقين
+    displayWorkers(allWorkers);
+  } catch (error) {
+    console.error("❌ خطأ في تحميل بيانات الحلاقين:", error);
+    showMessage("فشل تحميل بيانات الحلاقين. يرجى المحاولة مرة أخرى.", 'error');
+    
+    if (loadingState) loadingState.style.display = "none";
+    if (emptyState) {
+      emptyState.style.display = "block";
+      container.style.display = "none";
+    }
+  } finally {
+    showWorkersSkeleton(container, 0);
+  }
+}
 
 // ✅ عرض الحلاقين في الواجهة
 function displayWorkers(workers) {
@@ -20,13 +85,19 @@ function displayWorkers(workers) {
   const emptyState = document.getElementById("empty-state");
 
   if (loadingState) loadingState.style.display = "none";
-  if (emptyState) emptyState.style.display = "none";
-  container.innerHTML = "";
-
+  
   if (!workers.length) {
-    if (emptyState) emptyState.style.display = "block";
+    if (emptyState) {
+      emptyState.style.display = "block";
+      container.style.display = "none";
+    }
     return;
   }
+
+  if (emptyState) emptyState.style.display = "none";
+  container.style.display = "grid";
+  
+  container.innerHTML = "";
 
   workers.forEach(worker => {
     const card = document.createElement("div");
@@ -45,7 +116,7 @@ function displayWorkers(workers) {
     info.className = "worker-info";
 
     const name = document.createElement("h3");
-    name.textContent = worker.name;
+    name.textContent = sanitizeHTML(worker.name);
 
     const rating = document.createElement("div");
     rating.className = "worker-rating";
@@ -78,7 +149,7 @@ function displayWorkers(workers) {
 
     const location = document.createElement("div");
     location.className = "worker-location";
-    location.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${worker.location || "الموقع غير محدد"}`;
+    location.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${sanitizeHTML(worker.location) || "الموقع غير محدد"}`;
 
     details.appendChild(specialties);
     details.appendChild(location);
@@ -130,132 +201,9 @@ function displayWorkers(workers) {
     card.appendChild(status);
 
     container.appendChild(card);
-  });
-}
-
-// ✅ تحميل الحلاقين مع Loading Indicators
-async function loadWorkers() {
-  const container = document.getElementById("workers-container");
-
-  if (!container) {
-    console.error("❌ لم يتم العثور على workers-container");
-    return;
-  }
-
-  try {
-    // عرض skeleton loading
-    showWorkersSkeleton(container, 6);
-
-    // تحميل البيانات من Firebase (لا حاجة لـ select هنا)
-    const qWorkers = query(collection(db, "worker")); // Removed select
-    const workersSnap = await getDocs(qWorkers);
-
-    const qReviews = query(collection(db, "Reviews")); // Assuming you need all review data
-    const reviewsSnap = await getDocs(qReviews);
-
-    // Group ratings
-    const ratingsMap = new Map();
-    reviewsSnap.forEach((doc) => {
-      const { workerId, rating } = doc.data();
-      if (rating != null) {
-        if (!ratingsMap.has(workerId)) {
-          ratingsMap.set(workerId, { total: 0, count: 0 });
-        }
-        const entry = ratingsMap.get(workerId);
-        entry.total += rating;
-        entry.count += 1;
-      }
-    });
-
-    allWorkers = workersSnap.docs.map((doc) => {
-      const worker = doc.data();
-      const entry = ratingsMap.get(doc.id) || { total: 0, count: 0 };
-      const actualRating = entry.count > 0 ? (entry.total / entry.count).toFixed(1) : "0.0";
-      // Accessing fields directly from worker object
-      return { id: doc.id, name: worker.name, location: worker.location, isAvailable: worker.isAvailable, actualRating };
-    });
-
-    displayWorkers(allWorkers);
-    setupFilters();
-  } catch (err) {
-    console.error("❌ خطأ في تحميل العمال من Firebase:", err);
-
-    // عرض رسالة خطأ للمستخدم
-    if (container) {
-      container.innerHTML = `
-        <div class="error-state" style="text-align: center; padding: 60px;">
-          <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #e74c3c;"></i>
-          <h3>حدث خطأ في تحميل بيانات الحلاقين</h3>
-          <p>يرجى إعادة تحميل الصفحة أو التحقق من اتصالك بالإنترنت.</p>
-          <button onclick="window.location.reload()" class="btn primary-btn">إعادة تحميل</button>
-        </div>`;
-    }
-  }
-}
-
-// ✅ دالة إعادة المحاولة مع Loading Indicator
-async function retryLoadWorkers() {
-  const container = document.getElementById("workers-container");
-
-  // عرض skeleton loading
-  showWorkersSkeleton(container, 6);
-
-  try {
-    await loadWorkers();
-  } catch (error) {
-    console.error("خطأ في إعادة المحاولة:", error);
-    // في حالة الفشل، اعرض رسالة خطأ
-    if (container) {
-      container.innerHTML = `
-        <div class="error-state" style="text-align: center; padding: 60px;">
-          <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #e74c3c;"></i>
-          <h3>حدث خطأ في تحميل البيانات</h3>
-          <p>يرجى إعادة تحميل الصفحة</p>
-          <button onclick="window.location.reload()" class="btn primary-btn">إعادة تحميل</button>
-        </div>`;
-    }
-  }
-}
-
-// ✅ إعداد الفلاتر
-function setupFilters() {
-  document.getElementById("search-name")?.addEventListener("input", applyFilters);
-  document.getElementById("sort-rating")?.addEventListener("change", applyFilters);
-  document.getElementById("filter-availability")?.addEventListener("change", applyFilters);
-}
-
-// ✅ تطبيق الفلاتر
-function applyFilters() {
-  const searchTerm = document.getElementById("search-name").value.toLowerCase();
-  const sort = document.getElementById("sort-rating").value;
-  const availability = document.getElementById("filter-availability").value;
-
-  let filtered = [...allWorkers];
-
-  if (searchTerm) {
-    filtered = filtered.filter(w => w.name.toLowerCase().includes(searchTerm));
-  }
-
-  if (availability !== "") {
-    filtered = filtered.filter(w => w.isAvailable === (availability === "true"));
-  }
-
-  if (sort === "high") {
-    filtered.sort((a, b) => (b.actualRating || 0) - (a.actualRating || 0));
-  } else if (sort === "low") {
-    filtered.sort((a, b) => (a.actualRating || 0) - (b.actualRating || 0));
-  }
-
-  displayWorkers(filtered);
-}
-
-// تحميل العمال عند بدء الصفحة
-if (document.readyState === 'loading') {
-  document.addEventListener("DOMContentLoaded", loadWorkers);
-} else {
-  // DOM جاهز بالفعل
-  loadWorkers();
-}
-
-// ✅ جعل دالة retryLoadWorkers متاحة عالمياً
-window.retryLoadWorkers = retryLoadWorkers;
+  })};
+// ⬇️ Event listener للصفحة
+document.addEventListener("DOMContentLoaded", async () => {
+  // تحميل بيانات الحلاقين
+  await loadWorkers();
+});

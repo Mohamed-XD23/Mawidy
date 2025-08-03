@@ -24,16 +24,16 @@
         
         <form id="otp-form">
           <div class="otp-container">
-            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
-            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
-            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="الرقم الأول من الرمز" tabindex="0" />
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="الرقم الثاني من الرمز" tabindex="0" />
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="الرقم الثالث من الرمز" tabindex="0" />
             <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
             <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
             <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
           </div>
           
-          <button type="submit" class="btn primary-btn">
-            <i class="fas fa-check-circle"></i>
+          <button type="submit" class="btn primary-btn" id="verifyOtpBtn" tabindex="0">
+            <i class="fas fa-check-circle" aria-hidden="true"></i>
             تأكيد الرمز
           </button>
         </form>
@@ -43,15 +43,15 @@
             <i class="fas fa-clock"></i>
             لم تستلم الرمز؟
           </p>
-          <button type="button" class="resend-btn" id="resend-otp">
-            <i class="fas fa-redo-alt"></i>
+          <button type="button" class="resend-btn" id="resendOtpBtn" tabindex="0">
+            <i class="fas fa-redo-alt" aria-hidden="true"></i>
             إعادة الإرسال
           </button>
         </div>
         
         <div class="signup-link">
-          <a href="login.html" class="signup-text">
-            <i class="fas fa-arrow-left"></i>
+          <a href="login.html" class="signup-text" tabindex="0">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
             العودة لتسجيل الدخول
           </a>
         </div>

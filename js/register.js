@@ -1,207 +1,151 @@
-// register.js
-import { auth, db } from './firebase-config.js';
+//register.js
+import { auth, db } from "./firebase-config.js";
 import {
   createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  FacebookAuthProvider
-} from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
-
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 import {
   doc,
   setDoc,
-  getDoc,
   serverTimestamp,
-  collection,
-  addDoc,
-  query,
-  where,
-  getDocs,
-  getCountFromServer
-} from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { sanitizeHTML } from "./utils.js";
 
-// ✅ Added sanitizeHTML to imports
-import { 
-  showModal, 
-  setButtonLoading, 
-  showMessage, 
-  logClientError, 
-  sanitizeHTML 
-} from "./utils.js";
+// Strong password regex (at least 8 characters, one uppercase, one lowercase, one number, and one special character)
+const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-// ➤ إنشاء حساب بالبريد وكلمة المرور
-document.getElementById('register-form').addEventListener('submit', async (e) => {
+document.getElementById("register-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirm-password").value;
+  const role = document.getElementById("role").value;
+  const submitButton = document.querySelector("#register-form button[type=submit]");
+
+  // Validation checks
+  if (!name || !email || !password || !confirmPassword || !role) {
+    showMessage("يرجى ملء جميع الحقول.", 'error', 'حقل مفقود');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showMessage("كلمات المرور غير متطابقة.", 'error', 'خطأ في كلمة المرور');
+    return;
+  }
+
+  if (!strongPasswordRegex.test(password)) {
+    showMessage(
+      "كلمة المرور يجب أن تحتوي على الأقل 8 أحرف، وحرف كبير، وحرف صغير، ورقم، ورمز خاص (@$!%*?&).",
+      'error',
+      'كلمة مرور ضعيفة'
+    );
+    return;
+  }
+
+  // Show loading indicator
+  const loader = setButtonLoading(submitButton, "جارٍ إنشاء الحساب...");
+
   try {
-    const email = sanitizeHTML(document.getElementById('reg-email').value.trim());
-    const password = document.getElementById('reg-password').value;
-    const confirmPassword = document.getElementById('reg-confirm').value;
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-      showModal({
-        type: 'warning',
-        title: 'بريد إلكتروني غير صالح',
-        message: 'يرجى إدخال بريد إلكتروني صحيح.',
-        primaryText: 'موافق'
-      });
-      return;
-    }
-
-    // ➤ التحقق من قوة كلمة المرور باستخدام Regex متقدم
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%&*]).{8,}$/;
-    if (!passwordRegex.test(password)) {
-      showModal({
-        type: 'warning',
-        title: 'كلمة مرور غير آمنة',
-        message: `كلمة المرور يجب أن تحتوي على:\n- 8 أحرف على الأقل\n- حرف كبير وصغير\n- رقم\n- رمز خاص (!@#$%&*)`,
-        primaryText: 'موافق'
-      });
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      showModal({
-        type: 'warning',
-        title: 'كلمات المرور غير متطابقة',
-        message: 'يرجى التأكد من تطابق كلمتي المرور.',
-        primaryText: 'موافق'
-      });
-      return;
-    }
-
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-
-    // استخدام addDoc بدلاً من setDoc لتجنب مشاكل CORS في بعض الأجهزة المحمية
-    await addDoc(collection(db, "users"), {
+    // Create user with email and password
+    const { user } = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Save user data to Firestore with the selected role
+    await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
-      email: user.email,
-      role: "customer",
+      name: name,
+      email: email,
+      role: role,
       createdAt: serverTimestamp(),
-      securityHeaders: {
-        xssProtection: 'enabled',
-        cspReportOnly: false
-      }
     });
 
-    console.log("✅ تم إنشاء الحساب:", user);
-    showModal({
-      type: 'success',
-      title: 'مرحباً بك! 🎉',
-      message: 'تم إنشاء حسابك بنجاح. يمكنك الآن تصفح الحلاقين وحجز المواعيد.',
-      primaryText: 'ابدأ التصفح',
-      onPrimary: () => {
-        window.location.href = "worker_list.html";
-      }
-    });
+    showMessage("تم إنشاء الحساب بنجاح!", 'success', 'مرحبًا بك');
+    
+    // Redirect to index.html to let auth-check.js handle role-based navigation
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
   } catch (error) {
-    logClientError(error, 'registration');
-    console.error("❌ فشل في إنشاء الحساب:", error.message);
-    showModal({
-      type: 'error',
-      title: 'فشل إنشاء الحساب',
-      message: `حدث خطأ أثناء إنشاء الحساب: ${error.message}`,
-      primaryText: 'إعادة المحاولة'
-    });
+    console.error("❌ خطأ في إنشاء الحساب:", error);
+    let errorMessage = "فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.";
+    
+    // Handle specific Firebase errors
+    switch (error.code) {
+      case 'auth/email-already-in-use':
+        errorMessage = "البريد الإلكتروني مستخدم بالفعل. يرجى تسجيل الدخول بدلاً من ذلك.";
+        break;
+      case 'auth/invalid-email':
+        errorMessage = "البريد الإلكتروني غير صحيح.";
+        break;
+      case 'auth/weak-password':
+        errorMessage = "كلمة المرور ضعيفة جداً.";
+        break;
+      case 'auth/network-request-failed':
+        errorMessage = "فشل الاتصال بالشبكة. يرجى التحقق من اتصالك بالإنترنت.";
+        break;
+    }
+    
+    showMessage(errorMessage, 'error', 'خطأ في إنشاء الحساب');
+  } finally {
+    // Hide loading indicator
+    if (loader && typeof loader.stop === 'function') {
+      loader.stop();
+    }
   }
 });
 
-// ➤ عرض معلومات المستخدم بعد التسجيل
-function updateUserInfoDisplay(user) {
-  const userInfoSpan = document.getElementById('user-info');
-  if (userInfoSpan && user) {
-    const safeEmail = sanitizeHTML(user.email);
-    userInfoSpan.innerHTML = `مرحباً، ${safeEmail} (<span id="logout-link" style="cursor: pointer; text-decoration: underline;">تسجيل الخروج</span>)`;
-    
-    const logoutLink = document.getElementById('logout-link');
-    if (logoutLink) {
-      logoutLink.addEventListener('click', async () => {
-        await signOut(auth);
-        window.location.reload();
-      });
-    }
+// Utility function to show messages (similar to login.js)
+function showMessage(message, type = 'info', title = '') {
+  // Create message element if it doesn't exist
+  let messageEl = document.getElementById('message-popup');
+  if (!messageEl) {
+    messageEl = document.createElement('div');
+    messageEl.id = 'message-popup';
+    messageEl.className = 'message-popup';
+    document.body.appendChild(messageEl);
   }
+
+  // Set message content
+  messageEl.innerHTML = `
+    <div class="message-content ${type}">
+      <h3>${title || (type === 'success' ? 'نجاح' : type === 'error' ? 'خطأ' : 'معلومة')}</h3>
+      <p>${sanitizeHTML(message)}</p>
+      <button class="close-btn">&times;</button>
+    </div>
+  `;
+
+  // Add close functionality
+  const closeBtn = messageEl.querySelector('.close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      messageEl.style.display = 'none';
+    });
+  }
+
+  // Show message
+  messageEl.style.display = 'block';
+
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+    messageEl.style.display = 'none';
+  }, 5000);
 }
 
-// ➤ إظهار/إخفاء كلمة المرور
-document.querySelectorAll('.eye-toggle').forEach(button => {
-  button.addEventListener('click', () => {
-    const inputId = button.getAttribute('data-target');
-    const input = document.getElementById(inputId);
-    const icon = button.querySelector('i');
-
-    const hidden = input.type === "password";
-    input.type = hidden ? "text" : "password";
-    icon.classList.toggle("fa-eye", !hidden);
-    icon.classList.toggle("fa-eye-slash", hidden);
-  });
-});
-
-// ➤ تسجيل باستخدام Google
-document.querySelector('.social-btn.google').addEventListener('click', async () => {
-  const provider = new GoogleAuthProvider();
-
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (!userSnap.exists()) {
-      // أول مرة، أنشئ الحساب
-      await setDoc(userRef, {
-        uid: user.uid,
-        email: user.email,
-        role: "customer",
-        createdAt: serverTimestamp()
-      });
-      console.log("✅ تم إنشاء حساب Google جديد");
+// Utility function for button loading state (similar to login.js)
+function setButtonLoading(button, loadingText) {
+  if (!button) return null;
+  
+  const originalText = button.innerHTML;
+  button.disabled = true;
+  button.innerHTML = `
+    <span class="spinner"></span>
+    ${loadingText}
+  `;
+  
+  return {
+    stop: () => {
+      button.disabled = false;
+      button.innerHTML = originalText;
     }
-
-    window.location.href = "worker_list.html";
-  } catch (error) {
-    console.error("❌ فشل Google:", error.message);
-    showModal({
-      type: 'error',
-      title: 'فشل التسجيل عبر Google',
-      message: `حدث خطأ أثناء التسجيل عبر Google: ${error.message}`,
-      primaryText: 'إعادة المحاولة'
-    });
-  }
-});
-
-// ➤ تسجيل باستخدام Facebook
-document.querySelector('.social-btn.facebook').addEventListener('click', async () => {
-  const provider = new FacebookAuthProvider();
-
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (!userSnap.exists()) {
-      await setDoc(userRef, {
-        uid: user.uid,
-        email: user.email,
-        role: "customer",
-        createdAt: serverTimestamp()
-      });
-      console.log("✅ تم إنشاء حساب Facebook جديد");
-    }
-
-    window.location.href = "worker_list.html";
-  } catch (error) {
-    console.error("❌ فشل Facebook:", error.message);
-    showModal({
-      type: 'error',
-      title: 'فشل التسجيل عبر Facebook',
-      message: `حدث خطأ أثناء التسجيل عبر Facebook: ${error.message}`,
-      primaryText: 'إعادة المحاولة'
-    });
-  }
-});
+  };
+}

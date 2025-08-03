@@ -26,7 +26,7 @@
               <i class="fas fa-envelope"></i>
               البريد الإلكتروني
             </label>
-            <input type="email" id="email" placeholder="example@gmail.com" required />
+            <input type="email" id="email" placeholder="example@gmail.com" required aria-required="true">
           </div>
   
           <!-- Password -->
@@ -35,21 +35,19 @@
               <i class="fas fa-lock"></i>
               كلمة المرور
             </label>
-            <input type="password" id="password" placeholder="••••••••" required />
+            <input type="password" id="password" placeholder="••••••••" required aria-required="true">
             <button type="button" id="toggle-password" class="eye-toggle" aria-label="إظهار كلمة المرور">
               <i class="fas fa-eye"></i>
             </button>
           </div>
   
           <div class="forgot-password">
-            <a href="#" class="forgot-link">
-              <i class="fas fa-key"></i>
+            <a href="#" class="forgot-link" tabindex="0">
               نسيت كلمة المرور؟
             </a>
           </div>
           
-          <button type="submit" class="btn primary-btn">
-            <i class="fas fa-sign-in-alt"></i>
+          <button type="submit" class="btn primary-btn" tabindex="0">
             تسجيل الدخول
           </button>
         </form>
@@ -57,21 +55,19 @@
         <div class="divider"><span>أو</span></div>
   
         <div class="social-login">
-          <button class="social-btn google">
+          <button class="social-btn google" aria-label="تسجيل الدخول بحساب جوجل" tabindex="0">
             <i class="fab fa-google"></i>
-            <span>تسجيل الدخول بـ Google</span>
+            <span>الدخول باستخدام Google</span>
           </button>
-          <button class="social-btn facebook">
+          <button class="social-btn facebook" aria-label="تسجيل الدخول بحساب فيسبوك" tabindex="0">
             <i class="fab fa-facebook-f"></i>
-            <span>تسجيل الدخول بـ Facebook</span>
+            <span>الدخول باستخدام Facebook</span>
           </button>
         </div>
         
         <div class="signup-link">
-          <span>ليس لديك حساب؟ </span>
-          <a href="register.html" class="signup-text">
-            <i class="fas fa-user-plus"></i>
-            إنشاء حساب
+          <a href="register.html" class="signup-text" tabindex="0">
+            ليس لديك حساب؟ سجل الآن
           </a>
         </div>
       </div>

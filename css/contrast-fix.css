@@ -8,9 +8,9 @@
 .btn.primary-btn,
 .booking-btn,
 .book-btn {
-  color: var(--color-primary) !important;
+  color: #000000 !important; /* تحسين التباين مع الخلفية الصفراء */
   font-weight: 600 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; /* زيادة التباين */
 }
 
 .primary-btn:hover,
@@ -18,59 +18,59 @@
 .booking-btn:hover,
 .book-btn:hover {
   background: var(--color-accent-dark) !important;
-  color: var(--color-primary) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+  color: #000000 !important; /* الحفاظ على التباين العالي */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* تحسين الأزرار مع الخلفية المتدرجة */
 .btn.primary-btn,
 .booking-form .btn-primary {
-  color: var(--color-primary) !important;
-  border: 2px solid var(--color-primary) !important;
+  color: #000000 !important; /* تحسين التباين */
+  border: 2px solid #000000 !important; /* استخدام لون أسود للحدود */
 }
 
 .btn.primary-btn:hover,
 .booking-form .btn-primary:hover {
   background: var(--color-accent-dark) !important;
-  color: var(--color-primary) !important;
-  border-color: var(--color-primary) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
 }
 
 /* تحسين أزرار التحرير */
 .edit-btn {
   background: var(--color-accent) !important;
-  color: var(--color-primary) !important;
-  border: 1px solid var(--color-primary) !important;
+  color: #000000 !important; /* تحسين التباين */
+  border: 1px solid #000000 !important;
   font-weight: 600 !important;
 }
 
 .edit-btn:hover {
   background: var(--color-accent-dark) !important;
-  color: var(--color-primary) !important;
-  border-color: var(--color-primary) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
 }
 
 /* تحسين العلامات المتخصصة */
 .specialty-tag:hover {
   background: var(--color-accent) !important;
-  color: var(--color-primary) !important;
-  border-color: var(--color-primary) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
   font-weight: 600 !important;
 }
 
 /* تحسين أزرار الحجز */
 .booking-form .btn-primary {
   background: var(--color-accent) !important;
-  color: var(--color-primary) !important;
-  border: 2px solid var(--color-primary) !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
   font-weight: 700 !important;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important; /* زيادة التباين */
 }
 
 .booking-form .btn-primary:hover:not(:disabled) {
   background: var(--color-accent-dark) !important;
-  color: var(--color-primary) !important;
-  border-color: var(--color-primary) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
 }
 
 /* تحسين الأزرار في الوضع الداكن */
@@ -80,10 +80,10 @@
   .booking-btn,
   .book-btn,
   .edit-btn {
-    color: var(--color-primary) !important;
-    border: 2px solid var(--color-primary) !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
     font-weight: 700 !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important; /* زيادة التباين */
   }
   
   .primary-btn:hover,
@@ -92,8 +92,8 @@
   .book-btn:hover,
   .edit-btn:hover {
     background: var(--color-accent-dark) !important;
-    color: var(--color-primary) !important;
-    border-color: var(--color-primary) !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
   }
 }
 
@@ -101,10 +101,10 @@
 .hero-buttons .btn.primary-btn,
 .service-card .btn.primary-btn,
 .worker-card .btn.primary-btn {
-  color: var(--color-primary) !important;
-  border: 2px solid var(--color-primary) !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
   font-weight: 700 !important;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
   letter-spacing: 0.5px !important;
 }
 
@@ -112,9 +112,9 @@
 .service-card .btn.primary-btn:hover,
 .worker-card .btn.primary-btn:hover {
   background: var(--color-accent-dark) !important;
-  color: var(--color-primary) !important;
-  border-color: var(--color-primary) !important;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
 }
 
 /* تحسين النصوص في الأيقونات */
@@ -133,59 +133,59 @@
 .btn.primary-btn *,
 .booking-btn *,
 .book-btn * {
-  color: var(--color-primary) !important;
+  color: #000000 !important;
   text-shadow: inherit !important;
 }
 
 /* تحسين التباين لأزرار Modal */
 .modal-btn.primary {
-  color: var(--color-primary) !important;
+  color: #000000 !important;
   font-weight: 600 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
 }
 
 .modal-btn.primary:hover {
   background: var(--color-accent-dark) !important;
-  color: var(--color-primary) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+  color: #000000 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
 }
 
 .modal-btn.secondary {
-  color: var(--color-primary) !important;
+  color: #000000 !important;
   font-weight: 600 !important;
 }
 
 .modal-btn.secondary:hover {
   background: var(--color-primary) !important;
-  color: var(--card-background) !important;
+  color: #FFFFFF !important; /* استخدام لون أبيض للون الخلفية الداكنة */
 }
 
 /* تحسين التباين في الوضع الداكن للـ Modal */
 @media (prefers-color-scheme: dark) {
   .modal-btn.primary {
-    color: var(--color-primary) !important;
-    border: 2px solid var(--color-accent) !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
     font-weight: 700 !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
   }
   
   .modal-btn.primary:hover {
     background: var(--color-accent-dark) !important;
-    color: var(--color-primary) !important;
-    border-color: var(--color-accent) !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
   }
   
   .modal-btn.secondary {
-    color: var(--color-accent) !important;
-    border: 2px solid var(--color-accent) !important;
+    color: #FFFFFF !important; /* استخدام لون أبيض للون الخلفية الداكنة */
+    border: 2px solid #FFFFFF !important;
     font-weight: 700 !important;
   }
   
   .modal-btn.secondary:hover {
-    background: var(--color-accent) !important;
+    background: #FFFFFF !important;
     color: var(--color-primary) !important;
-    border-color: var(--color-accent) !important;
+    border-color: #FFFFFF !important;
   }
 }

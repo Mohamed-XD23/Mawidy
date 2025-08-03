@@ -7,7 +7,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/fi
 import {
   calculateAverageFromTotals, isValidRating, setButtonLoading,
   showModal, displayRatingStars, createRatingStars,
-  showProfileSkeleton, showReviewsSkeleton, showMessage
+  showProfileSkeleton, showReviewsSkeleton, showMessage, sanitizeHTML
 } from "./utils.js";
 import dayjs from "https://esm.sh/dayjs@1.11.10";
 import relativeTime from "https://esm.sh/dayjs@1.11.10/plugin/relativeTime";
@@ -135,14 +135,14 @@ async function fetchAndRenderReviews(workerId, currentUserId) {
     div.dataset.rating = r.rating || 0;
     div.innerHTML = `
       <div class="review-header">
-        <div class="review-avatar">${(r.userName || "م")[0]}</div>
+        <div class="review-avatar">${(sanitizeHTML(r.userName) || "م")[0]}</div>
         <div>
-          <span class="review-user">${r.userName || "مستخدم"}</span>
+          <span class="review-user">${sanitizeHTML(r.userName) || "مستخدم"}</span>
           <span class="review-date">${dateStr}</span>
         </div>
         <div class="review-stars">${displayRatingStars(r.rating || 0)}</div>
       </div>
-      <p class="review-comment">${r.comment || ""}</p>
+      <p class="review-comment">${sanitizeHTML(r.comment) || ""}</p>
     `;
     if (r.userId === currentUserId) {
       const edit = document.createElement("button");
@@ -280,3 +280,56 @@ function showEditForm(reviewId) {
     fetchAndRenderReviews(localStorage.getItem("selectedWorkerUID"), user.uid);
   };
 }
+
+// ✅ حفظ التقييم
+async function saveRating() {
+  const ratingInputs = document.querySelectorAll('.rating-stars input[name="rating"]:checked');
+  const commentInput = document.getElementById("review-text");
+  
+  // التأكد من وجود تقييم
+  if (ratingInputs.length === 0) {
+    showMessage("يرجى اختيار تقييم بين 1 و5 نجوم.", 'warning', 'تقييم مطلوب');
+    return;
+  }
+  
+  // التأكد من وجود تعليق
+  const comment = commentInput.value.trim();
+  if (!comment || comment.length < 5) {
+    showMessage("يرجى إدخال تعليق بحد أدنى 5 أحرف.", 'warning', 'تعليق غير كافٍ');
+    return;
+  }
+  
+  try {
+    const workerId = localStorage.getItem('selectedWorkerUID');
+    if (!workerId) {
+      showMessage("لم يتم تحديد الحلاق. يرجى العودة لقائمة الحلاقين.", 'error', 'فشل في التقييم');
+      return;
+    }
+    
+    await addDoc(collection(db, "Reviews"), {
+      workerId,
+      clientId: auth.currentUser.uid,
+      rating: parseInt(ratingInputs[0].value),
+      comment: sanitizeHTML(comment),
+      createdAt: serverTimestamp()
+    });
+    
+    // عرض رسالة نجاح واضحة
+    showModal({
+      type: 'success',
+      title: 'تم إرسال التقييم!',
+      message: 'شكرًا لتقييمك. سيتم مشاركته مع الحلاق.',
+      primaryText: 'حسنًا',
+      onPrimary: () => window.location.reload()
+    });
+  } catch (error) {
+    console.error("❌ خطأ في حفظ التقييم:", error);
+    showMessage("فشل حفظ التقييم. يرجى المحاولة مرة أخرى.", 'error', 'خطأ في الحفظ');
+  }
+}
+
+// ✅ التعامل مع فشل تحميل التقييمات
+//     }catch (error) {
+//       console.error("❌ خطأ في تحميل التقييمات:", error);
+//       showMessage("فشل تحميل التقييمات. يرجى المحاولة مرة أخرى.", 'error', 'خطأ في التحميل');
+// }

@@ -63,13 +63,6 @@ export function formatRelativeTime(date) {
   return `قبل ${Math.floor(diffInSeconds / 31536000)} سنة`;
 }
 
-/**
- * عرض رسالة snackbar (سيتم استبدالها بـ showMessage)
- * @param {string} message - الرسالة المراد عرضها
- * @param {string} type - نوع الرسالة (success, error, warning, default)
- */
-// export function showSnackbar(message, type = 'default') { ... }
-// تم إزالة تعريف showSnackbar هنا لأنه تم استبدال استدعاءاتها بـ showMessage
 
 /**
  * إضافة حالة التحميل للزر
@@ -184,33 +177,96 @@ export function showModal(options = {}) {
     <div class="modal-overlay" id="modal-overlay">
       <div class="modal-backdrop" onclick="closeModal()"></div>
       <div class="modal-container">
-        <div class="modal-content">
-          <div class="modal-icon ${type}">
+        <div class="modal-content" role="dialog" aria-modal="true">
+          <button class="modal-close-btn" onclick="closeModal()" aria-label="إغلاق">
+            <i class="fas fa-times"></i>
+          </button>
+          <div class="modal-icon ${type}" role="img" aria-label="${type === 'success' ? 'نجاح' : type === 'error' ? 'خطأ' : type === 'warning' ? 'تحذير' : 'معلومات'}">
             ${getModalIcon(type)}
           </div>
           <h2 class="modal-title">${title}</h2>
           <p class="modal-message">${message}</p>
           <div class="modal-actions ${secondaryText ? 'horizontal' : ''}">
-            <button class="modal-btn primary" onclick="handleModalPrimary()">${primaryText}</button>
-            ${secondaryText ? `<button class="modal-btn secondary" onclick="handleModalSecondary()">${secondaryText}</button>` : ''}
+            <button type="button" class="modal-btn primary" onclick="handleModalPrimary()" tabindex="0">${primaryText}</button>
+            ${secondaryText ? `<button type="button" class="modal-btn secondary" onclick="handleModalSecondary()" tabindex="0">${secondaryText}</button>` : ''}
           </div>
         </div>
       </div>
     </div>
   `;
-
-  // إضافة المودال للصفحة
   document.body.insertAdjacentHTML('beforeend', modalHTML);
-
-  // حفظ callbacks
-  window.modalCallbacks = {
-    onPrimary,
-    onSecondary,
-    onClose
+  
+  // تعيين دور الزر الرئيسي على أنه زر أولوي
+  const primaryBtn = document.querySelector('.modal-btn.primary');
+  if (primaryBtn) {
+    primaryBtn.setAttribute('role', 'button');
+    primaryBtn.setAttribute('tabindex', '0');
+  }
+  
+  // تعيين دور الزر الثانوي على أنه زر ثانوي
+  const secondaryBtn = document.querySelector('.modal-btn.secondary');
+  if (secondaryBtn) {
+    secondaryBtn.setAttribute('role', 'button');
+    secondaryBtn.setAttribute('tabindex', '0');
+  }
+  
+  // تعيين سمة aria-labelledby بشكل صحيح
+  const modalTitle = document.querySelector('.modal-title');
+  if (modalTitle) {
+    const modalContainer = document.querySelector('.modal-container');
+    if (modalContainer) {
+      modalContainer.setAttribute('aria-labelledby', modalTitle.id || 'modal-title');
+    }
+  }
+  
+  // تفعيل المستمعين بعد إنشاء العناصر
+  window.handleModalPrimary = () => {
+    closeModal();
+    if (onPrimary) onPrimary();
   };
-
-  // منع scroll في الخلفية
-  document.body.style.overflow = 'hidden';
+  
+  window.handleModalSecondary = () => {
+    closeModal();
+    if (onSecondary) onSecondary();
+  };
+  
+  window.closeModal = () => {
+    const overlay = document.getElementById('modal-overlay');
+    if (overlay) {
+      overlay.remove();
+    }
+    if (onClose) onClose();
+  };
+  
+  // إضافة دعم التنقل بالكيبورد
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+    
+    // دعم التنقل بالتاب داخل المودال
+    if (e.key === 'Tab') {
+      const modal = document.querySelector('.modal-container');
+      if (modal) {
+        const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex="0"]');
+        if (focusableElements.length > 0) {
+          e.preventDefault();
+          const currentFocus = document.activeElement;
+          const currentIndex = Array.from(focusableElements).indexOf(currentFocus);
+          
+          if (!e.shiftKey) {
+            // TAB بدون Shift - الانتقال إلى العنصر التالي
+            const nextIndex = (currentIndex + 1) % focusableElements.length;
+            focusableElements[nextIndex].focus();
+          } else {
+            // TAB مع Shift - الانتقال إلى العنصر السابق
+            const prevIndex = (currentIndex - 1 + focusableElements.length) % focusableElements.length;
+            focusableElements[prevIndex].focus();
+          }
+        }
+      }
+    }
+  });
 }
 
 /**
@@ -366,7 +422,6 @@ window.closeModal = closeModal;
 window.handleModalPrimary = handleModalPrimary;
 window.handleModalSecondary = handleModalSecondary;
 window.showLoginRegisterModal = showLoginRegisterModal;
-window.showMessage = showMessage;
 
 /**
  * إظهار loading overlay للصفحة كاملة
@@ -443,6 +498,10 @@ export function showWorkersSkeleton(container, count = 6) {
   if (!container) return;
   
   container.innerHTML = '';
+  
+  // If count is 0, just clear the container and return
+  if (count === 0) return;
+  
   for (let i = 0; i < count; i++) {
     const skeleton = document.createElement('div');
     skeleton.className = 'worker-card skeleton-card';
@@ -545,6 +604,32 @@ export function showLoginRegisterModal() {
   });
 }
 
+/**
+ * تحديث عرض معلومات المستخدم في واجهة التطبيق
+ * @param {Object} user - بيانات المستخدم من Firebase Auth
+ */
+export function updateUserInfoDisplay(user) {
+  const userInfoSpan = document.getElementById('user-info');
+  if (userInfoSpan && user) {
+    const safeEmail = sanitizeHTML(user.email);
+    userInfoSpan.innerHTML = `مرحباً، ${safeEmail} (<span id="logout-link" style="cursor: pointer; text-decoration: underline;">تسجيل الخروج</span>)`;
+    
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+      logoutLink.addEventListener('click', async () => {
+        await signOut(auth);
+        window.location.reload();
+      });
+    }
+  } else {
+    // إضافة إعادة التوجيه عند محاولة الوصول لصفحات محمية
+    const protectedPages = ['/worker_profile.html', '/worker_dashboard.html', '/booking.html'];
+    if (protectedPages.some(page => window.location.pathname.endsWith(page))) {
+      window.location.href = 'index.html';
+    }
+  }
+}
+
 // دالة تحديث نموذج التقييم
 export function updateReviewForm(userAlreadyReviewed, userReviewDocId = null) {
   const form = document.getElementById("review-form");
@@ -606,27 +691,9 @@ export function updateReviewForm(userAlreadyReviewed, userReviewDocId = null) {
  * @returns {string} Sanitized HTML string
  */
 export function sanitizeHTML(input) {
-  if (!input) return '';
-  // 1. Remove script tags completely
-  let sanitized = input.replace(/<script[^>]*>.*?<\/script>/gi, '');
-  
-  // 2. Escape HTML special characters
-  sanitized = sanitized.replace(/[&<>'"`]/g, (match) => {
-    const escapeMap = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      "'": '&#39;',
-      '"': '&quot;',
-      '`': '&#x60;'
-    };
-    return escapeMap[match];
-  });
-  
-  // 3. Filter dangerous URI schemes
-  sanitized = sanitized.replace(/(javascript:|data:)/gi, 'unsafe-protocol:');
-  
-  return sanitized;
+  const div = document.createElement('div');
+  div.textContent = input;
+  return div.innerHTML;
 }
 
 // Add error logging function

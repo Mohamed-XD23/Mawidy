@@ -22,13 +22,22 @@
         <p class="description">الرجاء إدخال بياناتك لإنشاء حساب جديد والاستمتاع بخدماتنا المميزة.</p>
         
         <form id="register-form">
+          <!-- Name -->
+          <div class="input-group">
+            <label for="name">
+              <i class="fas fa-user"></i>
+              الاسم الكامل
+            </label>
+            <input type="text" id="name" placeholder="اسمك الكامل" required aria-required="true">
+          </div>
+          
           <!-- Email -->
           <div class="input-group">
             <label for="email">
               <i class="fas fa-envelope"></i>
               البريد الإلكتروني
             </label>
-            <input type="email" id="reg-email" placeholder="example@gmail.com" required />
+            <input type="email" id="email" placeholder="بريدك الإلكتروني" required aria-required="true">
           </div>
           
           <!-- Password -->
@@ -37,8 +46,8 @@
               <i class="fas fa-lock"></i>
               كلمة المرور
             </label>
-            <input type="password" id="reg-password" placeholder="••••••••" required />
-            <button type="button" class="eye-toggle" data-target="reg-password" aria-label="إظهار كلمة المرور">
+            <input type="password" id="password" placeholder="••••••••" required aria-required="true">
+            <button type="button" class="eye-toggle" data-target="password" aria-label="إظهار كلمة المرور">
               <i class="fas fa-eye"></i>
             </button>
           </div>
@@ -49,38 +58,46 @@
               <i class="fas fa-shield-alt"></i>
               تأكيد كلمة المرور
             </label>
-            <input type="password" id="reg-confirm" placeholder="••••••••" required />
-            <button type="button" class="eye-toggle" data-target="reg-confirm" aria-label="إظهار كلمة المرور">
+            <input type="password" id="confirm-password" placeholder="••••••••" required aria-required="true">
+            <button type="button" class="eye-toggle" data-target="confirm-password" aria-label="إظهار كلمة المرور">
               <i class="fas fa-eye"></i>
             </button>
           </div>
           
-          <button type="submit" class="btn primary-btn">
-            <i class="fas fa-user-plus"></i>
-            إنشاء حساب
+          <!-- Role Selection -->
+          <div class="input-group">
+            <label for="role">
+              <i class="fas fa-user-tag"></i>
+              نوع الحساب
+            </label>
+            <select id="role" required aria-required="true">
+              <option value="">اختر نوع الحساب</option>
+              <option value="customer">عميل</option>
+              <option value="worker">حلاق</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="btn primary-btn" tabindex="0">
+            إنشاء الحساب
           </button>
         </form>
         
         <div class="divider"><span>أو</span></div>
         
         <div class="social-login">
-          <button class="social-btn google">
+          <button class="social-btn google" aria-label="تسجيل الدخول بحساب جوجل" tabindex="0">
             <i class="fab fa-google"></i>
-            <span>التسجيل بـ Google</span>
+            <span>التسجيل باستخدام Google</span>
           </button>
-          <button class="social-btn facebook">
+          <button class="social-btn facebook" aria-label="تسجيل الدخول بحساب فيسبوك" tabindex="0">
             <i class="fab fa-facebook-f"></i>
-            <span>التسجيل بـ Facebook</span>
+            <span>التسجيل باستخدام Facebook</span>
           </button>
         </div>
         
-        <div class="signup-link">
-          <span>لديك حساب؟ </span>
-          <a href="login.html" class="signup-text">
-            <i class="fas fa-sign-in-alt"></i>
-            تسجيل الدخول
-          </a>
-        </div>
+        <p class="login-link">
+          لديك حساب بالفعل؟ <a href="login.html" tabindex="0">سجل الدخول هنا</a>
+        </p>
       </div>
     </div>
   </div>

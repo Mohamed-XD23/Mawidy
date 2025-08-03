@@ -82,13 +82,13 @@
   </div>
 
   <!-- نافذة تأكيد -->
-  <div id="confirmation-modal" class="modal">
-    <div class="modal-content">
+  <div id="confirmation-modal" class="modal" tabindex="-1">
+    <div class="modal-content" role="dialog" aria-modal="true">
       <h3 id="modal-title">تأكيد العملية</h3>
       <p id="modal-message">هل أنت متأكد من هذا الإجراء؟</p>
       <div class="modal-actions">
-        <button id="confirm-action" class="btn primary-btn">تأكيد</button>
-        <button id="cancel-action" class="btn secondary-btn">إلغاء</button>
+        <button type="button" id="confirm-action" class="btn primary-btn" tabindex="0">تأكيد</button>
+        <button type="button" id="cancel-action" class="btn secondary-btn" tabindex="0">إلغاء</button>
       </div>
     </div>
   </div>

@@ -26,7 +26,7 @@
   </header>
 
   <main class="main-content">
-    <div class="container">
+    <div class="responsive-container">
       <div class="page-header">
         <h1 class="page-title">الحلاقون المتاحون 💇‍♂️</h1>
         <p class="page-description">اختر الحلاق المناسب لك واحجز موعدك بسهولة</p>
@@ -38,6 +38,9 @@
           <div class="search-box">
             <i class="fas fa-search"></i>
             <input type="text" id="search-name" placeholder="ابحث بالاسم...">
+            <div id="search-loading" class="loading-indicator" style="display: none;">
+              <i class="fas fa-spinner fa-spin"></i>
+            </div>
           </div>
           
           <div class="filter-group">
@@ -58,17 +61,21 @@
 
       <!-- Workers Grid -->
       <div class="workers-section">
-        <div id="workers-container" class="workers-grid">
+        <div id="workers-container" class="workers-grid responsive-container">
           <!-- Workers will be loaded here by JavaScript -->
         </div>
         
         <!-- Skeleton loading will be inserted here by JavaScript -->
         
         <!-- Empty State -->
-        <div id="empty-state" class="empty-state" style="display: none;">
-          <i class="fas fa-search"></i>
-          <h3>لا توجد نتائج</h3>
-          <p>لم نجد أي حلاقين يطابقون معايير البحث</p>
+        <div id="empty-state" class="empty-state">
+          <i class="fas fa-user-slash"></i>
+          <h3>لا توجد حلاقين</h3>
+          <p>عذرًا، لم نجد أي حلاقين متاحين في الوقت الحالي</p>
+          <button class="btn secondary-btn touch-target" onclick="location.reload()">
+            <i class="fas fa-redo"></i>
+            إعادة التحميل
+          </button>
         </div>
       </div>
     </div>
