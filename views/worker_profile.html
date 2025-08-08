@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="worker_profile_title">ملف الحلاق – Mawidy</title>
+  
+  
+  
+  <script src="js/theme-manager.js"></script>
+  <script type="module" src="js/utils.js"></script>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body class="worker-profile-page">
+  <div class="worker-profile">
+    <!-- Worker Profile Card -->
+    <script src="js/utils.js" type="module"></script>
+    <div class="worker-profile__card card" id="profile-card">
+      <div class="worker-profile__header">
+        <div class="worker-profile__avatar-container">
+          <img id="worker-photo" 
+               class="worker-profile__photo" 
+               src="img/default-avatar.svg" 
+               alt="صورة الحلاق" 
+               loading="lazy" />
+          <div id="worker-status" class="worker-profile__status-badge" data-status="unavailable">
+            <span class="worker-profile__status-dot"></span>
+            <span class="worker-profile__status-text" data-i18n="unavailable">غير متوفر</span>
+          </div>
+        </div>
+        
+        <div class="worker-profile__info">
+          <h1 id="worker-name" class="worker-profile__name" data-i18n="worker_name">اسم الحلاق</h1>
+          <div class="worker-profile__contact">
+            <i class="fas fa-phone-alt worker-profile__contact-icon"></i>
+            <span id="worker-phone" class="worker-profile__phone" data-i18n="worker_phone">رقم الهاتف</span>
+          </div>
+          
+          <div class="worker-profile__rating">
+            <span class="worker-profile__rating-label" data-i18n="worker_rating">التقييم:</span>
+            <div id="worker-rating" class="worker-profile__rating-stars"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="worker-profile__bio-container">
+        <h3 class="worker-profile__bio-title" data-i18n="about">نبذة عني</h3>
+        <p id="worker-bio" class="worker-profile__bio" data-i18n="worker_bio">
+          نبذة عن الحلاق
+        </p>
+      </div>
+      
+      <div class="worker-profile__actions">
+        <button class="btn btn--primary worker-profile__book-btn" tabindex="0">
+          <i class="fas fa-calendar-alt worker-profile__btn-icon"></i>
+          <span data-i18n="book_now">حجز موعد</span>
+        </button>
+        
+        <div class="worker-profile__social">
+          <a href="#" class="worker-profile__social-link" data-i18n="facebook" aria-label="فيسبوك" tabindex="0">
+            <i class="fab fa-facebook-f worker-profile__social-icon"></i>
+          </a>
+          <a href="#" class="worker-profile__social-link" data-i18n="twitter" aria-label="تويتر" tabindex="0">
+            <i class="fab fa-twitter worker-profile__social-icon"></i>
+          </a>
+          <a href="#" class="worker-profile__social-link" data-i18n="instagram" aria-label="إنستغرام" tabindex="0">
+            <i class="fab fa-instagram worker-profile__social-icon"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="worker-profile__reviews">
+      <div class="worker-profile__reviews-header">
+        <h3 class="worker-profile__reviews-title" data-i18n="reviews">
+          <i class="fas fa-star worker-profile__reviews-icon"></i>
+          <span>التقييمات</span>
+        </h3>
+        <div class="worker-profile__reviews-summary">
+          <span class="worker-profile__reviews-average" id="average-rating">4.8</span>
+          <span class="worker-profile__reviews-count" data-i18n="total_reviews">(24 تقييمًا)</span>
+        </div>
+      </div>
+      
+      <!-- Reviews List -->
+      <div class="worker-profile__reviews-list" id="reviews-list">
+        <!-- Review Item Template -->
+        <div class="worker-profile__review">
+          <div class="worker-profile__review-header">
+            <div class="worker-profile__reviewer">
+              <i class="fas fa-user-circle worker-profile__reviewer-avatar"></i>
+              <span class="worker-profile__reviewer-name" data-i18n="reviewer_name">محمد خالد</span>
+            </div>
+            <div class="worker-profile__review-rating" data-rating="5">
+              <i class="fas fa-star worker-profile__star"></i>
+              <i class="fas fa-star worker-profile__star"></i>
+              <i class="fas fa-star worker-profile__star"></i>
+              <i class="fas fa-star worker-profile__star"></i>
+              <i class="fas fa-star worker-profile__star"></i>
+            </div>
+            <span class="worker-profile__review-date">منذ 3 أيام</span>
+          </div>
+          <p class="worker-profile__review-text" data-i18n="review_text">
+            خدمة ممتازة، أنصح به للجميع! كان التعامل معه سلسًا واحترافيًا للغاية.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Add Review Form -->
+      <form id="review-form" class="worker-profile__review-form">
+        <h4 class="worker-profile__form-title" data-i18n="add_review">أضف تقييمك</h4>
+        
+        <div class="worker-profile__form-group">
+          <label for="review-text" class="worker-profile__form-label" data-i18n="your_review">تعليقك:</label>
+          <textarea id="review-text" 
+                    class="worker-profile__form-textarea" 
+                    data-i18n="review_placeholder" 
+                    placeholder="اكتب تعليقك هنا..." 
+                    required></textarea>
+        </div>
+        
+        <div class="worker-profile__form-group">
+          <label class="worker-profile__form-label" data-i18n="your_rating">تقييمك:</label>
+          <div id="review-rating-stars" class="worker-profile__rating-input">
+            <i class="far fa-star worker-profile__rating-star" data-rating="1"></i>
+            <i class="far fa-star worker-profile__rating-star" data-rating="2"></i>
+            <i class="far fa-star worker-profile__rating-star" data-rating="3"></i>
+            <i class="far fa-star worker-profile__rating-star" data-rating="4"></i>
+            <i class="far fa-star worker-profile__rating-star" data-rating="5"></i>
+          </div>
+          <input type="hidden" id="rating-value" name="rating" value="0" required>
+        </div>
+        
+        <div class="worker-profile__form-actions">
+          <button type="submit" class="btn btn--primary worker-profile__submit-btn" data-i18n="submit_review">
+            <i class="fas fa-paper-plane worker-profile__btn-icon"></i>
+            <span>إرسال التقييم</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="snackbar"></div>
+
+  <script type="module" src="js/utils.js"></script>
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/worker_profile.js"></script>
+</body>
+</html>

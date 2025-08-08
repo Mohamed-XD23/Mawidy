@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="workers_title">قائمة الحلاقين – Mawidy</title>
+  
+  
+  
+  <script src="../controllers/theme-manager.js"></script>
+  <script type="module" src="../controllers/utils.js"></script>
+  <script type="module" src="../controllers/firebase-config.js"></script>
+  <script type="module" src="../controllers/i18n.js"></script>
+  <!-- 🐛 Issue: i18n system not initialized on this page.
+       💡 Fix: Import <script type="module" src="js/i18n.js"></script> and invoke initI18n() to apply translations. -->
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body class="worker-list-page">
+  <!-- Header -->
+  <header class="worker-list-page__header">
+    <div class="container">
+      <div class="worker-list-page__brand">
+        <a href="index.html" class="worker-list-page__logo-link">
+          <h1 class="worker-list-page__logo">Mawidy</h1>
+        </a>
+      </div>
+      <nav class="worker-list-page__nav">
+        <a href="index.html" class="worker-list-page__nav-link" data-i18n="home">
+          <i class="fas fa-home worker-list-page__nav-icon"></i>
+          <span>الرئيسية</span>
+        </a>
+        <a href="worker_list.html" class="worker-list-page__nav-link worker-list-page__nav-link--active" data-i18n="workers">
+          <i class="fas fa-cut worker-list-page__nav-icon"></i>
+          <span>الحلاقين</span>
+        </a>
+        <a href="login.html" class="btn btn--secondary worker-list-page__login-btn" data-i18n="login">
+          <i class="fas fa-sign-in-alt worker-list-page__btn-icon"></i>
+          <span>تسجيل الدخول</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="worker-list-page__main">
+    <div class="worker-list-page__container">
+      <header class="worker-list-page__page-header">
+        <h1 class="worker-list-page__title" data-i18n="available_workers">
+          <i class="fas fa-cut worker-list-page__title-icon"></i>
+          <span>الحلاقون المتاحون</span>
+        </h1>
+        <p class="worker-list-page__description" data-i18n="workers_description">اختر الحلاق المناسب لك واحجز موعدك بسهولة</p>
+      </header>
+
+      <!-- Filters Section -->
+      <section class="worker-list-page__filters">
+        <div class="worker-list-page__filters-container">
+          <div class="worker-list-page__search">
+            <div class="worker-list-page__search-box">
+              <i class="fas fa-search worker-list-page__search-icon"></i>
+              <input type="text" 
+                     id="search-name" 
+                     class="worker-list-page__search-input" 
+                     placeholder="ابحث بالاسم..." 
+                     data-i18n="search_placeholder" 
+                     data-i18n-placeholder="ابحث بالاسم...">
+              <div id="search-loading" class="worker-list-page__loading" style="display: none;">
+                <i class="fas fa-spinner fa-spin worker-list-page__loading-icon"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="worker-list-page__filter-group">
+            <div class="worker-list-page__filter-item">
+              <label for="sort-rating" class="worker-list-page__filter-label" data-i18n="sort_by">الترتيب:</label>
+              <div class="worker-list-page__select-container">
+                <select id="sort-rating" class="worker-list-page__filter-select">
+                  <option value="" data-i18n="sort_by_rating">حسب التقييم</option>
+                  <option value="high" data-i18n="highest_rated">الأعلى تقييمًا</option>
+                  <option value="low" data-i18n="lowest_rated">الأدنى تقييمًا</option>
+                </select>
+                <i class="fas fa-chevron-down worker-list-page__select-arrow"></i>
+              </div>
+            </div>
+            
+            <div class="worker-list-page__filter-item">
+              <label for="filter-availability" class="worker-list-page__filter-label" data-i18n="availability">الحالة:</label>
+              <div class="worker-list-page__select-container">
+                <select id="filter-availability" class="worker-list-page__filter-select">
+                  <option value="" data-i18n="all_statuses">الكل</option>
+                  <option value="true" data-i18n="available_only">متاح</option>
+                  <option value="false" data-i18n="unavailable_only">غير متاح</option>
+                </select>
+                <i class="fas fa-chevron-down worker-list-page__select-arrow"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workers Grid -->
+      <section class="worker-list-page__workers">
+        <div id="workers-container" class="worker-list-page__grid">
+          <!-- Workers will be loaded here by JavaScript -->
+          
+          <!-- Skeleton loading will be inserted here by JavaScript -->
+          <template id="skeleton-template">
+            <div class="worker-list-page__skeleton">
+              <div class="worker-list-page__skeleton-avatar"></div>
+              <div class="worker-list-page__skeleton-details">
+                <div class="worker-list-page__skeleton-name"></div>
+                <div class="worker-list-page__skeleton-specialty"></div>
+                <div class="worker-list-page__skeleton-rating"></div>
+              </div>
+            </div>
+          </template>
+        </div>
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="worker-list-page__empty-state" style="display: none;">
+          <div class="worker-list-page__empty-content">
+            <i class="fas fa-user-slash worker-list-page__empty-icon"></i>
+            <h3 class="worker-list-page__empty-title" data-i18n="no_workers">لا توجد حلاقين</h3>
+            <p class="worker-list-page__empty-message" data-i18n="no_workers_description">
+              عذرًا، لم نجد أي حلاقين متاحين في الوقت الحالي
+            </p>
+            <button class="btn btn--secondary worker-list-page__reload-btn" onclick="location.reload()">
+              <i class="fas fa-redo worker-list-page__btn-icon"></i>
+              <span data-i18n="reload">إعادة التحميل</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/worker.js"></script>
+</body>
+</html>

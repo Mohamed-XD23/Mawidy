@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="index_title">Mawidy - خدمات الحلاقة والتجميل</title>
+  <link rel="stylesheet" href="../public/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="../controllers/theme-manager.js"></script>
+  <script type="module" src="../controllers/utils.js"></script>
+  <script type="module" src="../controllers/i18n.js"></script>
+</head>
+
+<body class="home-page">
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header__brand">
+        <h1 class="header__logo">Mawidy</h1>
+      </div>
+      <nav class="header__nav">
+        <a href="worker_list.html" class="header__link" tabindex="0" data-i18n="workers">الحلاقين</a>
+        <a href="#services" class="header__link" tabindex="0" data-i18n="services">الخدمات</a>
+        <a href="about.html" class="header__link" tabindex="0" data-i18n="about">من نحن</a>
+      </nav>
+      <div class="header__links">
+        <a href="login.html" class="btn btn--secondary header__login-btn" id="login-btn" tabindex="0"
+          data-i18n="login">تسجيل الدخول</a>
+        <a href="register.html" class="btn btn--secondary header__register-btn" id="register-btn" tabindex="0"
+          data-i18n="regiter">إنشاء حساب</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero__content">
+        <h1 class="hero__title" data-i18n="hero_title">
+          احجز موعدك مع أفضل الحلاقين 💇‍♂️
+        </h1>
+        <p class="hero__description" data-i18n="hero_description">
+          اكتشف أفضل خدمات الحلاقة والتجميل في منطقتك. احجز موعدك بسهولة
+          واستمتع بتجربة مميزة مع محترفين معتمدين.
+        </p>
+        <div class="hero__actions">
+          <a href="register.html" class="hero__btn hero__btn--primary">
+            <i class="fas fa-rocket hero__btn-icon"></i>
+            <span class="hero__btn-text" data-i18n="start_now">ابدأ الآن</span>
+          </a>
+          <a href="worker_list.html" class="hero__btn hero__btn--outline">
+            <i class="fas fa-users hero__btn-icon"></i>
+            <span class="hero__btn-text" data-i18n="browse_workers">تصفح الحلاقين</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="services">
+    <div class="container">
+      <h2 class="section__title" data-i18n="our_services">خدماتنا</h2>
+      <div class="services__grid">
+        <div class="services__card">
+          <div class="services__card-icon">
+            <i class="fas fa-cut"></i>
+          </div>
+          <h3 class="services__card-title" data-i18n="haircut_service">
+            قص الشعر
+          </h3>
+          <p class="services__card-desc" data-i18n="haircut_description">
+            قصات عصرية وكلاسيكية بأيدي خبراء
+          </p>
+        </div>
+
+        <div class="services__card">
+          <div class="services__card-icon">
+            <i class="fas fa-spa"></i>
+          </div>
+          <h3 class="services__card-title" data-i18n="facial_service">
+            العناية بالوجه
+          </h3>
+          <p class="services__card-desc" data-i18n="facial_description">
+            خدمات العناية والتنظيف العميق
+          </p>
+        </div>
+
+        <div class="services__card">
+          <div class="services__card-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h3 class="services__card-title" data-i18n="styling_service">
+            تصفيف الشعر
+          </h3>
+          <p class="services__card-desc" data-i18n="styling_description">
+            تسريحات مميزة للمناسبات الخاصة
+          </p>
+        </div>
+
+        <div class="services__card">
+          <div class="services__card-icon">
+            <i class="fas fa-money-bill-1-wave"></i>
+          </div>
+          <h3 class="services__card-title" data-i18n="styling_service">
+            أسعار منافسة
+          </h3>
+          <p class="services__card-desc" data-i18n="styling_description">
+            أسعارنا تنافسية، وجودتنا لا تضاهى
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact">
+    <div class="container">
+      <h2 class="contact__title" data-i18n="contact_us">اتصل بنا</h2>
+      <p class="contact__description" data-i18n="contact_description">
+        لأي استفسارات أو اقتراحات، لا تتردد في التواصل معنا عبر البريد
+        الإلكتروني أو وسائل التواصل الاجتماعي.
+      </p>
+      <div class="contact__social">
+        <a href="#" class="contact__social-link" aria-label="فيسبوك" tabindex="0">
+          <i class="fab fa-facebook-f contact__social-icon"></i>
+        </a>
+        <a href="#" class="contact__social-link" aria-label="تيكتوك" tabindex="0">
+          <i class="fab fa-tiktok contact__social-icon"></i>
+        </a>
+        <a href="#" class="contact__social-link" aria-label="إنستغرام" tabindex="0">
+          <i class="fab fa-instagram contact__social-icon"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__content">
+        <div class="footer__info">
+          <h3 class="footer__logo">Mawidy</h3>
+          <p class="footer__tagline">
+            منصتك المفضلة لحجز مواعيد الحلاقة والتجميل
+          </p>
+        </div>
+        <div class="footer__nav">
+          <h4 class="footer__nav-title">روابط سريعة</h4>
+          <ul class="footer__nav-list">
+            <li class="footer__nav-item">
+              <a href="about.html" class="footer__nav-link">من نحن</a>
+            </li>
+            <li class="footer__nav-item">
+              <a href="privacy.html" class="footer__nav-link">سياسة الخصوصية</a>
+            </li>
+            <li class="footer__nav-item">
+              <a href="terms.html" class="footer__nav-link">شروط الاستخدام</a>
+            </li>
+            <li class="footer__nav-item">
+              <a href="#contact" class="footer__nav-link">اتصل بنا</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__copyright">
+        <p class="footer__copyright-text" data-i18n="copyright">
+          &copy; 2024 Mawidy. جميع الحقوق محفوظة.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="../controllers/firebase-config.js"></script>
+  <script type="module" src="../controllers/auth-check.js"></script>
+</body>
+
+</html>

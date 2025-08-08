@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="settings_title">الإعدادات - Mawidy</title>
+  
+  <link rel="stylesheet" href="../public/css/settings.css" />
+  <!-- Font Awesome -->
+  
+  <script src="../controllers/theme-manager.js"></script>
+  <script type="module" src="../controllers/utils.js"></script>
+  <script type="module" src="../controllers/firebase-config.js"></script>
+  <script type="module" src="../controllers/settings.js"></script>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+  <div class="container">
+    <div class="settings-page">
+      <!-- Header -->
+      <header class="header">
+        <div class="header__brand">
+          <h1 class="header__logo">Mawidy</h1>
+        </div>
+        <nav class="header__nav">
+          <a href="index.html" class="header__link" data-i18n="home">الرئيسية</a>
+          <a href="customer_profile.html" class="header__link" data-i18n="profile">الملف الشخصي</a>
+        </nav>
+      </header>
+      
+      <main class="settings-page__main">
+        <div class="settings-page__container">
+          <header class="settings-page__header">
+            <h1 class="settings-page__title" data-i18n="settings">الإعدادات</h1>
+          </header>
+          
+          <section class="settings-page__section card">
+            <h2 class="settings-page__section-title" data-i18n="language">اللغة</h2>
+            <div class="settings-page__form-group">
+              <select id="languageSelect" class="settings-page__select">
+                <option value="ar" data-i18n="arabic">العربية</option>
+                <option value="en" data-i18n="english">الإنجليزية</option>
+              </select>
+              <button id="changeLanguageBtn" class="btn btn--primary settings-page__button" data-i18n="update_language">تحديث اللغة</button>
+            </div>
+          </section>
+          
+          <section class="settings-page__section card">
+            <h2 class="settings-page__section-title" data-i18n="theme">المظهر</h2>
+            <div class="settings-page__form-group">
+              <div class="settings-page__theme-options">
+                <button class="settings-page__theme-option" data-theme="light">
+                  <i class="fas fa-sun settings-page__theme-icon"></i>
+                  <span class="settings-page__theme-label" data-i18n="light_theme">فاتح</span>
+                </button>
+                <button class="settings-page__theme-option" data-theme="dark">
+                  <i class="fas fa-moon settings-page__theme-icon"></i>
+                  <span class="settings-page__theme-label" data-i18n="dark_theme">داكن</span>
+                </button>
+                <button class="settings-page__theme-option" data-theme="system">
+                  <i class="fas fa-desktop settings-page__theme-icon"></i>
+                  <span class="settings-page__theme-label" data-i18n="system_theme">نظام التشغيل</span>
+                </button>
+                </label>
+                
+                <label class="theme-option">
+                  <input type="radio" name="theme" value="auto" id="theme-auto">
+                  <div class="theme-card">
+                    <span class="theme-icon">⚙️</span>
+                    <span class="theme-name" data-i18n="auto_mode">حسب الجهاز</span>
+                    <span class="theme-desc" data-i18n="auto_mode_desc">يتبع إعدادات النظام تلقائياً</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </section>
+          
+          <section class="settings-page__section card">
+            <h2 class="settings-page__section-title" data-i18n="account_settings">إعدادات الحساب</h2>
+            
+            <div class="settings-page__form-group">
+              <label for="displayName" class="settings-page__label" data-i18n="display_name">الاسم المعروض</label>
+              <div class="settings-page__input-group">
+                <input type="text" id="displayName" class="settings-page__input" placeholder="أدخل اسمك" data-i18n-placeholder="enter_name">
+                <button id="updateNameBtn" class="btn btn--primary settings-page__button" data-i18n="update_name">تحديث الاسم</button>
+              </div>
+            </div>
+            
+            <div class="settings-page__form-group">
+              <label for="currentPassword" class="settings-page__label" data-i18n="current_password">كلمة المرور الحالية</label>
+              <input type="password" id="currentPassword" class="settings-page__input" placeholder="أدخل كلمة المرور الحالية" data-i18n-placeholder="enter_current_password">
+              <label for="newPassword" class="settings-page__label" data-i18n="new_password">كلمة المرور الجديدة</label>
+              <div class="settings-page__input-group">
+                <input type="password" id="newPassword" class="settings-page__input" placeholder="أدخل كلمة المرور الجديدة" data-i18n-placeholder="enter_new_password">
+                <button id="updatePasswordBtn" class="btn btn--primary settings-page__button" data-i18n="update_password">تحديث كلمة المرور</button>
+              </div>
+            </div>
+          </section>
+          
+          <section class="settings-page__section card settings-page__danger-zone">
+            <h2 class="settings-page__section-title settings-page__danger-title" data-i18n="danger_zone">منطقة الخطر</h2>
+            <div class="settings-page__form-group">
+              <p class="settings-page__warning-message" data-i18n="delete_account_warning">حذف الحساب نهائيًا. لا يمكن التراجع عن هذا الإجراء.</p>
+              <button id="deleteAccountBtn" class="btn btn--danger settings-page__delete-button" data-i18n="delete_account">
+                <i class="fas fa-trash-alt settings-page__delete-icon"></i>
+                <span>حذف الحساب</span>
+              </button>
+            </div>
+          </section>
+          
+          <section class="settings-page__section card settings-page__logout">
+            <h2 class="settings-page__section-title" data-i18n="logout">تسجيل الخروج</h2>
+            <div class="settings-page__form-group">
+              <p class="settings-page__logout-message" data-i18n="logout_confirm">هل أنت متأكد أنك تريد تسجيل الخروج؟</p>
+              <button id="logout-btn" class="btn btn--secondary settings-page__logout-button" data-i18n="logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>تسجيل الخروج</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+              <i class="fas fa-trash-alt"></i>
+              حذف الحساب
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>  
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__content">
+        <div class="footer__brand">
+          <h3 class="footer__logo">Mawidy</h3>
+          <p class="footer__tagline">منصتك المفضلة لحجز مواعيد الحلاقة والتجميل</p>
+        </div>
+        <div class="footer__section">
+          <h4 class="footer__heading" data-i18n="quick_links">روابط سريعة</h4>
+          <div class="footer__links">
+            <a href="index.html" class="footer__link" data-i18n="home">الرئيسية</a>
+            <a href="about.html" class="footer__link" data-i18n="about_us">من نحن</a>
+            <a href="privacy.html" class="footer__link" data-i18n="privacy_policy">سياسة الخصوصية</a>
+            <a href="terms.html" class="footer__link" data-i18n="terms_of_use">شروط الاستخدام</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copyright" data-i18n="copyright">&copy; 2025 Mawidy. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // Logout functionality
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      if (confirm(document.getElementById('logout_confirm').innerText)) {
+        // The actual logout is handled in auth-check.js
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</body>
+</html>

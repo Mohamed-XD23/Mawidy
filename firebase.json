@@ -1,5 +1,14 @@
 {
   "hosting": {
+    "public": "public",
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false,
     "headers": [
       {
         "source": "**/*.@(js|css)",
@@ -31,6 +40,7 @@
           }
         ]
       }
-    ]
+    ],
+    "error404": "/404.html"
   }
 }

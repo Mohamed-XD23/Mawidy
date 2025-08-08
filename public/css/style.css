@@ -1,0 +1,28 @@
+/**
+ * Main Stylesheet
+ * Imports all other CSS files in the correct order
+ */
+
+/* 1. Variables and Settings */
+@import 'variables.css';
+
+/* 2. Base Styles */
+@import 'base.css';
+
+/* 3. Typography */
+@import 'typography.css';
+
+/* 4. Layout & Grid */
+@import 'layouts.css';
+
+/* 5. Components */
+@import 'buttons.css';
+@import 'components.css';
+
+/* 6. Utilities - Should be last to ensure they take precedence */
+@import 'utilities.css';
+
+/* 7. Print Styles */
+@media print {
+  @import 'print.css';
+}

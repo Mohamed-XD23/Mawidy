@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="otp_verification_title">التحقق من الرمز – Mawidy</title>
+  
+  <link rel="stylesheet" href="../public/css/dark-mode-fix.css" />
+  <!-- Font Awesome -->
+  
+  <script type="module" src="../controllers/utils.js"></script>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="otp-verification">
+      <div class="otp-verification__card">
+        <div class="otp-verification__icon-container">
+          <i class="fas fa-shield-check otp-verification__icon"></i>
+        </div>
+        
+        <h1 class="otp-verification__title" data-i18n="otp_verification_heading">التحقق من الرمز 🔐</h1>
+        <p class="otp-verification__description" data-i18n="otp_verification_description">تم إرسال رمز التحقق إلى بريدك الإلكتروني. الرجاء إدخال الرمز المكون من 6 أرقام للمتابعة.</p>
+        
+        <form id="otp-form" class="otp-verification__form">
+          <div class="otp-verification__inputs">
+            <input type="text" class="otp-verification__input" maxlength="1" pattern="[0-9]" inputmode="numeric" 
+                   aria-label="otp_digit_1" data-i18n="otp_digit_1" tabindex="0" />
+            <input type="text" class="otp-verification__input" maxlength="1" pattern="[0-9]" inputmode="numeric" 
+                   aria-label="otp_digit_2" data-i18n="otp_digit_2" tabindex="0" />
+            <input type="text" class="otp-verification__input" maxlength="1" pattern="[0-9]" inputmode="numeric" 
+                   aria-label="otp_digit_3" data-i18n="otp_digit_3" tabindex="0" />
+            <input type="text" class="otp-verification__input" maxlength="1" pattern="[0-9]" inputmode="numeric" 
+                   aria-label="otp_digit_4" data-i18n="otp_digit_4" tabindex="0" />
+            <input type="text" class="otp-verification__input" maxlength="1" pattern="[0-9]" inputmode="numeric" 
+                   aria-label="otp_digit_5" data-i18n="otp_digit_5" tabindex="0" />
+            <input type="text" class="otp-verification__input" maxlength="1" pattern="[0-9]" inputmode="numeric" 
+                   aria-label="otp_digit_6" data-i18n="otp_digit_6" tabindex="0" />
+          </div>
+          
+          <button type="submit" class="btn btn--primary otp-verification__submit" id="verifyOtpBtn" tabindex="0" data-i18n="confirm_otp">
+            <i class="fas fa-check-circle otp-verification__submit-icon" aria-hidden="true"></i>
+            <span>تأكيد الرمز</span>
+          </button>
+        </form>
+        
+        <div class="otp-verification__resend">
+          <p class="otp-verification__resend-text" data-i18n="otp_not_received">
+            <i class="fas fa-clock otp-verification__resend-icon"></i>
+            <span>لم تستلم الرمز؟</span>
+          </p>
+          <button type="button" class="btn btn--text otp-verification__resend-btn" id="resendOtpBtn" tabindex="0" data-i18n="resend_otp">
+            <i class="fas fa-redo-alt otp-verification__resend-icon" aria-hidden="true"></i>
+            <span>إعادة إرسال الرمز</span>
+            <span class="otp-verification__countdown" id="resendCountdown">(60)</span>
+          </button>
+          <p class="otp-verification__note" data-i18n="check_spam">
+            <i class="fas fa-info-circle otp-verification__note-icon"></i>
+            <span>يرجى التحقق من مجلد الرسائل غير المرغوب فيها إذا لم تجد الرسالة في صندوق الوارد.</span>
+          </p>
+        </div>
+        
+        <div class="otp-verification__footer">
+          <a href="login.html" class="otp-verification__back-link" tabindex="0" data-i18n="back_to_login">
+            <i class="fas fa-arrow-right otp-verification__back-icon"></i>
+            <span>العودة إلى تسجيل الدخول</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module">
+    import { showModal } from '../controllers/utils.js'; // Import showModal
+
+    // Enhanced OTP Input handling
+    const otpInputs = document.querySelectorAll('.otp-input');
+    const resendBtn = document.getElementById('resend-otp');
+    let resendTimer = 60;
+    
+    // OTP Input functionality
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        // Only allow numbers
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        
+        if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+        
+        // Auto-submit when all fields are filled
+        if (index === otpInputs.length - 1 && e.target.value.length === 1) {
+          const allFilled = Array.from(otpInputs).every(input => input.value.length === 1);
+          if (allFilled) {
+            document.getElementById('otp-form').dispatchEvent(new Event('submit'));
+          }
+        }
+      });
+      
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+        
+        if (e.key === 'ArrowLeft' && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+        
+        if (e.key === 'ArrowRight' && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      });
+      
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+        
+        for (let i = 0; i < Math.min(pastedData.length, otpInputs.length - index); i++) {
+          otpInputs[index + i].value = pastedData[i];
+        }
+        
+        const nextIndex = Math.min(index + pastedData.length, otpInputs.length - 1);
+        otpInputs[nextIndex].focus();
+      });
+    });
+    
+    // Resend timer
+    function startResendTimer() {
+      resendBtn.disabled = true;
+      resendBtn.innerHTML = `<i class="fas fa-clock"></i> إعادة الإرسال (${resendTimer}s)`;
+      
+      const timer = setInterval(() => {
+        resendTimer--;
+        resendBtn.innerHTML = `<i class="fas fa-clock"></i> <span data-i18n="resend_otp">${resendTimer}s)</span>`;
+        
+        if (resendTimer <= 0) {
+          clearInterval(timer);
+          resendBtn.disabled = false;
+          resendBtn.innerHTML = '<i class="fas fa-redo-alt"></i> <span data-i18n="resend_otp">إعادة الإرسال</span>'
+          resendTimer = 60;
+        }
+      }, 1000);
+    }
+    
+    // Start timer on page load
+    startResendTimer();
+    
+    // Resend button click
+    resendBtn.addEventListener('click', () => {
+      if (!resendBtn.disabled) {
+        startResendTimer();
+        // Add your resend logic here
+        console.log('Resending OTP...');
+      }
+    });
+    
+    // Form submission
+    document.getElementById('otp-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const otp = Array.from(otpInputs).map(input => input.value).join('');
+      
+      if (otp.length === 6) {
+        console.log('OTP submitted:', otp);
+        // Add your verification logic here
+      } else {
+        showModal({
+          type: 'warning',
+          title: 'otp_incomplete_title',
+          message: 'otp_incomplete_message',
+          primaryText: 'ok_button'
+        });
+      }
+    });
+    
+    // Focus first input on load
+    window.addEventListener('load', () => {
+      otpInputs[0].focus();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="worker_dashboard_title">لوحة الحلاق – Mawidy</title>
+  <script src="../controllers/theme-manager.js"></script>
+  <script type="module" src="../controllers/utils.js"></script>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="../public/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+  <div class="worker-dashboard">
+    <header class="worker-dashboard__header">
+      <div class="worker-dashboard__header-content">
+        <h1 class="worker-dashboard__title">
+          <i class="fas fa-calendar-check worker-dashboard__title-icon"></i>
+          <span data-i18n="worker_dashboard_heading">لوحة الحلاق - إدارة المواعيد</span>
+        </h1>
+        <div class="worker-dashboard__actions">
+          <button id="refresh-btn" class="btn btn--secondary worker-dashboard__action-btn">
+            <i class="fas fa-sync-alt worker-dashboard__action-icon"></i>
+            <span data-i18n="refresh">تحديث</span>
+          </button>
+          <button id="logout-btn" class="btn btn--danger worker-dashboard__action-btn">
+            <i class="fas fa-sign-out-alt worker-dashboard__action-icon"></i>
+            <span data-i18n="logout">تسجيل الخروج</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- إحصائيات سريعة -->
+    <div class="worker-dashboard__stats">
+      <div class="worker-dashboard__stat-card worker-dashboard__stat-card--pending">
+        <div class="worker-dashboard__stat-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="worker-dashboard__stat-info">
+          <h3 id="pending-count" class="worker-dashboard__stat-count">0</h3>
+          <p class="worker-dashboard__stat-label" data-i18n="pending_confirmation">بانتظار التأكيد</p>
+        </div>
+      </div>
+      <div class="worker-dashboard__stat-card worker-dashboard__stat-card--confirmed">
+        <div class="worker-dashboard__stat-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="worker-dashboard__stat-info">
+          <h3 id="confirmed-count" class="worker-dashboard__stat-count">0</h3>
+          <p class="worker-dashboard__stat-label" data-i18n="confirmed">تم التأكيد</p>
+        </div>
+      </div>
+      <div class="worker-dashboard__stat-card worker-dashboard__stat-card--rejected">
+        <div class="worker-dashboard__stat-icon">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="worker-dashboard__stat-info">
+          <h3 id="rejected-count" class="worker-dashboard__stat-count">0</h3>
+          <p class="worker-dashboard__stat-label" data-i18n="rejected">مرفوض</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- فلاتر -->
+    <div class="worker-dashboard__filters">
+      <div class="worker-dashboard__filter-group">
+        <label for="status-filter" class="worker-dashboard__filter-label" data-i18n="filter_by_status">حالة الحجز</label>
+        <select id="status-filter" class="worker-dashboard__filter-select">
+          <option value="" data-i18n="all_statuses">جميع الحالات</option>
+          <option value="بانتظار التأكيد" data-i18n="pending_confirmation">بانتظار التأكيد</option>
+          <option value="تم التأكيد" data-i18n="confirmed">تم التأكيد</option>
+          <option value="مرفوض" data-i18n="rejected">مرفوض</option>
+        </select>
+      </div>
+      <div class="worker-dashboard__filter-group">
+        <label for="date-filter" class="worker-dashboard__filter-label" data-i18n="filter_by_date">التاريخ</label>
+        <div class="worker-dashboard__date-input-container">
+          <input type="date" id="date-filter" class="worker-dashboard__date-input" placeholder="فلترة حسب التاريخ" data-i18n-placeholder="فلترة حسب التاريخ">
+          <i class="fas fa-calendar-alt worker-dashboard__date-icon"></i>
+        </div>
+      </div>
+      <button id="clear-filters" class="btn btn--secondary worker-dashboard__clear-btn" data-i18n="clear_filters">
+        <i class="fas fa-times worker-dashboard__btn-icon"></i>
+        <span>مسح الفلاتر</span>
+      </button>
+    </div>
+
+    <!-- قائمة المواعيد -->
+    <div id="appointments-list" class="worker-dashboard__appointments">
+      <div class="worker-dashboard__loading">
+        <i class="fas fa-spinner fa-spin worker-dashboard__loading-icon"></i>
+        <span class="worker-dashboard__loading-text" data-i18n="loading_appointments">جارٍ تحميل المواعيد...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة تأكيد -->
+  <div id="confirmation-modal" class="worker-dashboard__modal" tabindex="-1">
+    <div class="worker-dashboard__modal-overlay"></div>
+    <div class="worker-dashboard__modal-content" role="dialog" aria-modal="true">
+      <button class="worker-dashboard__modal-close" aria-label="إغلاق">
+        <i class="fas fa-times"></i>
+      </button>
+      <h3 id="modal-title" class="worker-dashboard__modal-title" data-i18n="confirm_action">تأكيد العملية</h3>
+      <p id="modal-message" class="worker-dashboard__modal-message" data-i18n="are_you_sure">هل أنت متأكد من هذا الإجراء؟</p>
+      <div class="worker-dashboard__modal-actions">
+        <button type="button" id="confirm-action" class="btn btn--primary worker-dashboard__modal-btn" tabindex="0" data-i18n="confirm">
+          <i class="fas fa-check worker-dashboard__btn-icon"></i>
+          <span>تأكيد</span>
+        </button>
+        <button type="button" id="cancel-action" class="btn btn--secondary worker-dashboard__modal-btn" tabindex="0" data-i18n="cancel">
+          <i class="fas fa-times worker-dashboard__btn-icon"></i>
+          <span>إلغاء</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../controllers/worker_dashboard.js"></script>
+</body>
+</html>

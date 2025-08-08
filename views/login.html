@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="login_title">تسجيل الدخول – Mawidy</title>
+  
+  
+  <!-- Font Awesome -->
+  
+  <script src="../controllers/theme-manager.js"></script>
+  <script type="module" src="../controllers/utils.js"></script>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="login">
+      <div class="login__card">
+        <h1 class="login__title" data-i18n="welcome_back">مرحبًا بعودتك! 👋</h1>
+        <p class="login__description" data-i18n="login_description">الرجاء إدخال بيانات الدخول للوصول إلى حسابك.</p>
+        
+        <form id="login-form" class="login__form">
+          <!-- Email -->
+          <div class="login__input-group">
+            <label for="email" class="login__label">
+              <i class="fas fa-envelope login__icon"></i>
+              <span data-i18n="email">البريد الإلكتروني</span>
+            </label>
+            <input type="email" id="email" class="login__input" placeholder="example@gmail.com" required aria-required="true" data-i18n-placeholder="example@gmail.com">
+          </div>
+  
+          <!-- Password -->
+          <div class="login__input-group">
+            <label for="password" class="login__label">
+              <i class="fas fa-lock login__icon"></i>
+              <span data-i18n="password">كلمة المرور</span>
+            </label>
+            <div class="login__password-wrapper">
+              <input type="password" id="password" class="login__input" placeholder="••••••••" required aria-required="true" data-i18n-placeholder="••••••••">
+              <button type="button" id="toggle-password" class="login__toggle-password" aria-label="إظهار كلمة المرور" data-i18n-aria-label="إظهار كلمة المرور">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+  
+          <div class="login__forgot-password">
+            <a href="#" class="login__forgot-link" tabindex="0">
+              <span data-i18n="forgot_password">نسيت كلمة المرور؟</span>
+            </a>
+          </div>
+          <div class="login__actions">
+            <button type="submit" class="btn btn--primary btn--block login__submit" data-i18n="login">
+              <i class="fas fa-sign-in-alt login__submit-icon"></i>
+              <span>تسجيل الدخول</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="login__divider" data-i18n="or">
+          <span class="login__divider-line"></span>
+          <span class="login__divider-text">أو</span>
+          <span class="login__divider-line"></span>
+        </div>
+
+        <div class="login__social">
+          <p class="login__social-text" data-i18n="login_with">أو سجل الدخول باستخدام</p>
+          <div class="login__social-buttons">
+            <button type="button" class="btn btn--outline login__social-btn" id="google-login" aria-label="تسجيل الدخول بحساب جوجل" data-i18n-aria-label="تسجيل الدخول بحساب جوجل">
+              <i class="fab fa-google login__social-icon"></i>
+              <span class="login__social-text">جوجل</span>
+            </button>
+            <button type="button" class="btn btn--outline login__social-btn" id="facebook-login" aria-label="تسجيل الدخول بحساب فيسبوك" data-i18n-aria-label="تسجيل الدخول بحساب فيسبوك">
+              <i class="fab fa-facebook-f login__social-icon"></i>
+              <span class="login__social-text">فيسبوك</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="login__register">
+          <span class="login__register-text" data-i18n="no_account">ليس لديك حساب؟</span>
+          <a href="register.html" class="login__register-link" tabindex="0" data-i18n="create_account">إنشاء حساب جديد</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../controllers/firebase-config.js"></script>
+  <script type="module" src="../controllers/login.js"></script>
+  <script type="module" src="../controllers/utils.js"></script>
+</body>
+</html>

@@ -1,2 +1,2 @@
-firebase-config.js
-js/env.js
+controllers/firebase-config.js
+conrtollers/env.js

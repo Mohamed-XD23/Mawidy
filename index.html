@@ -1,128 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mawidy - خدمات الحلاقة والتجميل</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/dark-mode-fix.css" />
-  <link rel="stylesheet" href="css/contrast-fix.css" />
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script type="module" src="js/utils.js"></script>
-</head>
-
-<body class="home-page">
-  <!-- Header -->
-  <header class="header">
-    <div class="container">
-      <div class="nav-brand">
-        <h1 class="logo">Mawidy</h1>
-      </div>
-      <nav class="nav-menu">
-        <a href="worker_list.html" class="nav-link" tabindex="0">الحلاقين</a>
-        <a href="#services" class="nav-link" tabindex="0">الخدمات</a>
-        <a href="#about" class="nav-link" tabindex="0">من نحن</a>
-        <a href="login.html" class="btn secondary-btn" id="login-btn" tabindex="0">تسجيل الدخول</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <h1 class="hero-title">احجز موعدك مع أفضل الحلاقين 💇‍♂️</h1>
-        <p class="hero-description">
-          اكتشف أفضل خدمات الحلاقة والتجميل في منطقتك. احجز موعدك بسهولة واستمتع بتجربة مميزة مع محترفين معتمدين.
-        </p>
-        <div class="hero-buttons">
-          <a href="register.html" class="btn primary-btn">
-            <i class="fas fa-rocket"></i>
-            ابدأ الآن
-          </a>
-          <a href="worker_list.html" class="btn outline-btn">
-            <i class="fas fa-users"></i>
-            تصفح الحلاقين
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Services Section -->
-  <section id="services" class="services">
-    <div class="container">
-      <h2 class="section-title">خدماتنا</h2>
-      <div class="services-grid">
-        <div class="service-card">
-          <div class="service-icon">
-            <i class="fas fa-cut"></i>
-          </div>
-          <h3 class="service-title">قص الشعر</h3>
-          <p class="service-description">قصات عصرية وكلاسيكية بأيدي خبراء</p>
-        </div>
-        
-        <div class="service-card">
-          <div class="service-icon">
-            <i class="fas fa-spa"></i>
-          </div>
-          <h3 class="service-title">العناية بالوجه</h3>
-          <p class="service-description">خدمات العناية والتنظيف العميق</p>
-        </div>
-        
-        <div class="service-card">
-          <div class="service-icon">
-            <i class="fas fa-user-tie"></i>
-          </div>
-          <h3 class="service-title">تصفيف الشعر</h3>
-          <p class="service-description">تسريحات مميزة للمناسبات الخاصة</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact" class="contact-section">
-    <div class="container">
-      <h2>اتصل بنا</h2>
-      <p>لأي استفسارات أو اقتراحات، لا تتردد في التواصل معنا عبر البريد الإلكتروني أو وسائل التواصل الاجتماعي.</p>
-      <div class="contact-links">
-        <a href="#" class="contact-link" aria-label="فيسبوك" tabindex="0">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="#" class="contact-link" aria-label="تويتر" tabindex="0">
-          <i class="fab fa-twitter"></i>
-        </a>
-        <a href="#" class="contact-link" aria-label="إنستغرام" tabindex="0">
-          <i class="fab fa-instagram"></i>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <h3 class="logo">Mawidy</h3>
-          <p>منصتك المفضلة لحجز مواعيد الحلاقة والتجميل</p>
-        </div>
-        <div class="footer-links">
-          <h4>روابط سريعة</h4>
-          <a href="#services">الخدمات</a>
-          <a href="#about">من نحن</a>
-          <a href="#contact">اتصل بنا</a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 Mawidy. جميع الحقوق محفوظة.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script type="module" src="js/firebase-config.js"></script>
-  <script type="module" src="js/auth-check.js"></script>
-</body>
-</html>

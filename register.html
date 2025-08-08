@@ -1,108 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إنشاء حساب – Mawidy</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/dark-mode-fix.css" />
-  <link rel="stylesheet" href="css/contrast-fix.css" />
-  <!-- Font Awesome -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer" />
-  <script type="module" src="js/utils.js"></script>
-</head>
-<body>
-  <div class="content-wrapper">
-    <div class="login-container">
-      <div class="login-card">
-        <h1 class="welcome-title">انضم إلينا! 🎉</h1>
-        <p class="description">الرجاء إدخال بياناتك لإنشاء حساب جديد والاستمتاع بخدماتنا المميزة.</p>
-        
-        <form id="register-form">
-          <!-- Name -->
-          <div class="input-group">
-            <label for="name">
-              <i class="fas fa-user"></i>
-              الاسم الكامل
-            </label>
-            <input type="text" id="name" placeholder="اسمك الكامل" required aria-required="true">
-          </div>
-          
-          <!-- Email -->
-          <div class="input-group">
-            <label for="email">
-              <i class="fas fa-envelope"></i>
-              البريد الإلكتروني
-            </label>
-            <input type="email" id="email" placeholder="بريدك الإلكتروني" required aria-required="true">
-          </div>
-          
-          <!-- Password -->
-          <div class="input-group">
-            <label for="password">
-              <i class="fas fa-lock"></i>
-              كلمة المرور
-            </label>
-            <input type="password" id="password" placeholder="••••••••" required aria-required="true">
-            <button type="button" class="eye-toggle" data-target="password" aria-label="إظهار كلمة المرور">
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-          
-          <!-- Confirm Password -->
-          <div class="input-group">
-            <label for="confirm-password">
-              <i class="fas fa-shield-alt"></i>
-              تأكيد كلمة المرور
-            </label>
-            <input type="password" id="confirm-password" placeholder="••••••••" required aria-required="true">
-            <button type="button" class="eye-toggle" data-target="confirm-password" aria-label="إظهار كلمة المرور">
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-          
-          <!-- Role Selection -->
-          <div class="input-group">
-            <label for="role">
-              <i class="fas fa-user-tag"></i>
-              نوع الحساب
-            </label>
-            <select id="role" required aria-required="true">
-              <option value="">اختر نوع الحساب</option>
-              <option value="customer">عميل</option>
-              <option value="worker">حلاق</option>
-            </select>
-          </div>
-          
-          <button type="submit" class="btn primary-btn" tabindex="0">
-            إنشاء الحساب
-          </button>
-        </form>
-        
-        <div class="divider"><span>أو</span></div>
-        
-        <div class="social-login">
-          <button class="social-btn google" aria-label="تسجيل الدخول بحساب جوجل" tabindex="0">
-            <i class="fab fa-google"></i>
-            <span>التسجيل باستخدام Google</span>
-          </button>
-          <button class="social-btn facebook" aria-label="تسجيل الدخول بحساب فيسبوك" tabindex="0">
-            <i class="fab fa-facebook-f"></i>
-            <span>التسجيل باستخدام Facebook</span>
-          </button>
-        </div>
-        
-        <p class="login-link">
-          لديك حساب بالفعل؟ <a href="login.html" tabindex="0">سجل الدخول هنا</a>
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <script type="module" src="js/firebase-config.js"></script>
-  <script type="module" src="js/register.js"></script>
-</body>
-</html>

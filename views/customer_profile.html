@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="customer_profile_title">ملف الشخصي - Mawidy</title>
+  
+  <link rel="stylesheet" href="../public/css/customer_profile.css" />
+  
+  <!-- Font Awesome -->
+  
+  <script src="../controllers/theme-manager.js"></script>
+  <script type="module" src="../controllers/utils.js"></script>
+  <script type="module" src="../controllers/firebase-config.js"></script>
+  <script type="module" src="../controllers/customer_profile.js"></script>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+  <div class="container">
+    <div class="customer-profile">
+      <!-- Header -->
+      <header class="header">
+        <div class="header__brand">
+          <h1 class="header__logo">Mawidy</h1>
+        </div>
+        <nav class="header__nav">
+          <a href="index.html" class="header__link" data-i18n="home">الرئيسية</a>
+          <a href="settings.html" class="header__link" data-i18n="settings">الإعدادات</a>
+          <button class="header__theme-toggle" data-theme-toggle title="تبديل المظهر">
+            <i class="fas fa-moon header__theme-icon"></i>
+          </button>
+          <a href="#" id="logout-btn" class="btn btn--secondary header__logout" data-i18n="logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>تسجيل الخروج</span>
+          </a>
+        </nav>
+      </header>
+      
+      <main class="customer-profile__main">
+        <div class="customer-profile__container">
+          <header class="customer-profile__header">
+            <h1 class="customer-profile__title">
+              <i class="fas fa-user customer-profile__icon"></i>
+              <span data-i18n="my_profile">ملفي الشخصي</span>
+            </h1>
+          </header>
+        
+        <section class="customer-profile__section card">
+          <h2 class="customer-profile__section-title" data-i18n="account_info">
+            <i class="fas fa-user-circle customer-profile__section-icon"></i>
+            <span>معلومات الحساب</span>
+          </h2>
+          <div id="profileInfo" class="customer-profile__info">
+            <!-- Profile info will be loaded here -->
+            <div class="customer-profile__skeleton skeleton-card"></div>
+          </div>
+        </section>
+        
+        <section class="customer-profile__section customer-profile__appointments card">
+          <h2 class="customer-profile__section-title">
+            <i class="fas fa-calendar-check customer-profile__section-icon"></i>
+            <span data-i18n="my_appointments">مواعيدي السابقة</span>
+          </h2>
+          <div id="appointmentsListContainer" class="customer-profile__appointments-container">
+            <ul id="appointmentsList" class="customer-profile__appointments-list">
+              <!-- Appointments will be loaded here -->
+              <li class="customer-profile__skeleton skeleton-card"></li>
+              <li class="customer-profile__skeleton skeleton-card"></li>
+              <li class="customer-profile__skeleton skeleton-card"></li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  </div>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__content">
+        <div class="footer__brand">
+          <h3 class="footer__logo">Mawidy</h3>
+          <p class="footer__tagline">منصتك المفضلة لحجز مواعيد الحلاقة والتجميل</p>
+        </div>
+        <div class="footer__section">
+          <h4 class="footer__heading" data-i18n="quick_links">روابط سريعة</h4>
+          <div class="footer__links">
+            <a href="index.html" class="footer__link" data-i18n="home">الرئيسية</a>
+            <a href="about.html" class="footer__link" data-i18n="about_us">من نحن</a>
+            <a href="privacy.html" class="footer__link" data-i18n="privacy_policy">سياسة الخصوصية</a>
+            <a href="terms.html" class="footer__link" data-i18n="terms_of_use">شروط الاستخدام</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copyright" data-i18n="copyright">&copy; 2025 Mawidy. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // Logout functionality
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      // Use i18n-powered modal dialog instead of confirm
+      showModal({
+        type: 'warning',
+        title: t('logout'),
+        message: t('logout_confirm'),
+        primaryText: t('yes'),
+        secondaryText: t('no'),
+        onPrimary: () => {
+          // The actual logout is handled in auth-check.js
+          window.location.href = 'login.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

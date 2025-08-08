@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="error_404_title">خطأ 404 - الصفحة غير موجودة - Mawidy</title>
+  
+  <link rel="stylesheet" href="../public/css/404.css" />
+  <link rel="stylesheet" href="../public/css/dark-mode-fix.css" />
+  <link rel="stylesheet" href="../public/css/contrast-fix.css" />
+  <!-- Font Awesome -->
+  
+  <style>
+    .error-container {
+      text-align: center;
+      padding: 100px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .error-icon {
+      font-size: 4rem;
+      color: var(--color-secondary);
+      margin-bottom: 20px;
+    }
+    
+    .error-title {
+      font-size: 2.5rem;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+    }
+    
+    .error-message {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    
+    .home-link {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--color-accent);
+      color: var(--color-primary);
+      text-decoration: none;
+      border-radius: var(--border-radius-small);
+      font-weight: var(--font-weight-semibold);
+      transition: var(--transition);
+    }
+    
+    .home-link:hover {
+      background: var(--color-accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 193, 7, 0.4);
+    }
+  </style>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body class="not-found-page">
+  <div class="not-found-page__container">
+    <!-- Header -->
+    <header class="not-found-page__header">
+      <div class="not-found-page__brand">
+        <a href="index.html" class="not-found-page__logo-link">
+          <h1 class="not-found-page__logo">Mawidy</h1>
+        </a>
+      </div>
+      <nav class="not-found-page__nav">
+        <a href="index.html" class="not-found-page__nav-link" data-i18n="home">
+          <i class="fas fa-home not-found-page__nav-icon"></i>
+          <span>الرئيسية</span>
+        </a>
+        <a href="worker_list.html" class="not-found-page__nav-link" data-i18n="workers">
+          <i class="fas fa-cut not-found-page__nav-icon"></i>
+          <span>الحلاقين</span>
+        </a>
+        <a href="login.html" class="btn btn--secondary not-found-page__login-btn" data-i18n="login">
+          <i class="fas fa-sign-in-alt not-found-page__btn-icon"></i>
+          <span>تسجيل الدخول</span>
+        </a>
+      </nav>
+    </header>
+    
+    <main class="not-found-page__main">
+      <section class="not-found-page__error">
+        <div class="not-found-page__error-icon">
+          <i class="fas fa-exclamation-triangle not-found-page__error-triangle"></i>
+        </div>
+        <h1 class="not-found-page__error-code">404</h1>
+        <h2 class="not-found-page__error-title" data-i18n="page_not_found">الصفحة غير موجودة</h2>
+        <p class="not-found-page__error-message" data-i18n="error_404_message">
+          عذرًا، يبدو أن الصفحة التي تبحث عنها غير موجودة أو تم نقلها.
+        </p>
+        <a href="index.html" class="btn btn--primary not-found-page__home-link" data-i18n="back_to_home">
+          <i class="fas fa-home not-found-page__btn-icon"></i>
+          <span>العودة إلى الصفحة الرئيسية</span>
+        </a>
+      </section>
+    </main>
+    </div>
+  </div>
+  
+  <footer class="not-found-page__footer">
+    <div class="not-found-page__footer-container">
+      <div class="not-found-page__footer-content">
+        <div class="not-found-page__footer-brand">
+          <a href="index.html" class="not-found-page__footer-logo-link">
+            <h3 class="not-found-page__footer-logo">Mawidy</h3>
+          </a>
+          <p class="not-found-page__footer-tagline" data-i18n="platform_description">
+            منصتك المفضلة لحجز مواعيد الحلاقة والتجميل
+          </p>
+          <div class="not-found-page__footer-social">
+            <a href="#" class="not-found-page__footer-social-link" aria-label="فيسبوك">
+              <i class="fab fa-facebook-f not-found-page__footer-social-icon"></i>
+            </a>
+            <a href="#" class="not-found-page__footer-social-link" aria-label="تويتر">
+              <i class="fab fa-twitter not-found-page__footer-social-icon"></i>
+            </a>
+            <a href="#" class="not-found-page__footer-social-link" aria-label="إنستغرام">
+              <i class="fab fa-instagram not-found-page__footer-social-icon"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div class="not-found-page__footer-links">
+          <h4 class="not-found-page__footer-heading" data-i18n="quick_links">روابط سريعة</h4>
+          <ul class="not-found-page__footer-links-list">
+            <li class="not-found-page__footer-link-item">
+              <a href="index.html" class="not-found-page__footer-link" data-i18n="home">
+                <i class="fas fa-chevron-left not-found-page__footer-link-icon"></i>
+                <span>الرئيسية</span>
+              </a>
+            </li>
+            <li class="not-found-page__footer-link-item">
+              <a href="about.html" class="not-found-page__footer-link" data-i18n="about">
+                <i class="fas fa-chevron-left not-found-page__footer-link-icon"></i>
+                <span>من نحن</span>
+              </a>
+            </li>
+            <li class="not-found-page__footer-link-item">
+              <a href="privacy.html" class="not-found-page__footer-link" data-i18n="privacy">
+                <i class="fas fa-chevron-left not-found-page__footer-link-icon"></i>
+                <span>سياسة الخصوصية</span>
+              </a>
+            </li>
+            <li class="not-found-page__footer-link-item">
+              <a href="terms.html" class="not-found-page__footer-link" data-i18n="terms">
+                <i class="fas fa-chevron-left not-found-page__footer-link-icon"></i>
+                <span>شروط الاستخدام</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="not-found-page__footer-contact">
+          <h4 class="not-found-page__footer-heading" data-i18n="contact_us">اتصل بنا</h4>
+          <ul class="not-found-page__footer-contact-list">
+            <li class="not-found-page__footer-contact-item">
+              <i class="fas fa-envelope not-found-page__footer-contact-icon"></i>
+              <a href="mailto:info@mawidy.com" class="not-found-page__footer-contact-link">
+                info@mawidy.com
+              </a>
+            </li>
+            <li class="not-found-page__footer-contact-item">
+              <i class="fas fa-phone-alt not-found-page__footer-contact-icon"></i>
+              <a href="tel:+966501234567" class="not-found-page__footer-contact-link">
+                +966 50 123 4567
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="not-found-page__footer-bottom">
+        <p class="not-found-page__footer-copyright" data-i18n="copyright">
+          &copy; 2025 Mawidy. جميع الحقوق محفوظة.
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

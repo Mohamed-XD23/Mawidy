@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="register_title">إنشاء حساب – Mawidy</title>
+  
+  
+  <!-- Font Awesome -->
+  
+  <script src="../controllers/theme-manager.js"></script>
+  <script type="module" src="../controllers/utils.js"></script>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+  <div class="container">
+    <div class="register">
+      <div class="register__card">
+        <h1 class="register__title" data-i18n="join_us">انضم إلينا! 🎉</h1>
+        <p class="register__description" data-i18n="register_description">الرجاء إدخال بياناتك لإنشاء حساب جديد والاستمتاع بخدماتنا المميزة.</p>
+        
+        <form id="register-form" class="register__form">
+          <!-- Name -->
+          <div class="register__input-group">
+            <label for="name" class="register__label">
+              <i class="fas fa-user register__icon"></i>
+              <span data-i18n="full_name">الاسم الكامل</span>
+            </label>
+            <input type="text" id="name" class="register__input" placeholder="اسمك الكامل" required aria-required="true" data-i18n-placeholder="اسمك الكامل">
+          </div>
+          
+          <!-- Email -->
+          <div class="register__input-group">
+            <label for="email" class="register__label">
+              <i class="fas fa-envelope register__icon"></i>
+              <span data-i18n="email">البريد الإلكتروني</span>
+            </label>
+            <input type="email" id="email" class="register__input" placeholder="بريدك الإلكتروني" required aria-required="true" data-i18n-placeholder="بريدك الإلكتروني">
+          </div>
+          
+          <!-- Password -->
+          <div class="register__input-group">
+            <label for="password" class="register__label">
+              <i class="fas fa-lock register__icon"></i>
+              <span data-i18n="password">كلمة المرور</span>
+            </label>
+            <div class="register__password-wrapper">
+              <input type="password" id="password" class="register__input" placeholder="••••••••" required aria-required="true" data-i18n-placeholder="••••••••">
+              <button type="button" id="toggle-password" class="register__toggle-password" aria-label="إظهار كلمة المرور" data-i18n-aria-label="إظهار كلمة المرور">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Confirm Password -->
+          <div class="register__input-group">
+            <label for="confirm-password" class="register__label">
+              <i class="fas fa-lock register__icon"></i>
+              <span data-i18n="confirm_password">تأكيد كلمة المرور</span>
+            </label>
+            <div class="register__password-wrapper">
+              <input type="password" id="confirm-password" class="register__input" placeholder="••••••••" required aria-required="true" data-i18n-placeholder="••••••••">
+              <button type="button" id="toggle-confirm-password" class="register__toggle-password" aria-label="إظهار تأكيد كلمة المرور" data-i18n-aria-label="إظهار تأكيد كلمة المرور">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="register__actions">
+            <button type="submit" class="btn btn--primary btn--block register__submit" data-i18n="register">
+              <i class="fas fa-user-plus register__submit-icon"></i>
+              <span>إنشاء الحساب</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="register__divider" data-i18n="or">
+          <span class="register__divider-line"></span>
+          <span class="register__divider-text">أو</span>
+          <span class="register__divider-line"></span>
+        </div>
+
+        <div class="register__social">
+          <p class="register__social-text" data-i18n="register_with">أو سجل باستخدام</p>
+          <div class="register__social-buttons">
+            <button type="button" class="btn btn--outline register__social-btn" id="google-register" aria-label="التسجيل بحساب جوجل" data-i18n-aria-label="التسجيل بحساب جوجل">
+              <i class="fab fa-google register__social-icon"></i>
+              <span class="register__social-text">جوجل</span>
+            </button>
+            <button type="button" class="btn btn--outline register__social-btn" id="facebook-register" aria-label="التسجيل بحساب فيسبوك" data-i18n-aria-label="التسجيل بحساب فيسبوك">
+              <i class="fab fa-facebook-f register__social-icon"></i>
+              <span class="register__social-text">فيسبوك</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="register__login">
+          <span class="register__login-text" data-i18n="already_have_account">لديك حساب بالفعل؟</span>
+          <a href="login.html" class="register__login-link" tabindex="0" data-i18n="login_here">تسجيل الدخول هنا</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/register.js"></script>
+</body>
+</html>

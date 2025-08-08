@@ -1,0 +1,184 @@
+/* Print Styles */
+/* This stylesheet ensures that web pages print cleanly and professionally */
+
+@media print {
+  /* Reset margins and padding for the whole document */
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+
+  /* Base typography for print */
+  body {
+    color: #000;
+    background: #fff;
+    font-size: 12pt;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide elements that shouldn't be printed */
+  .no-print,
+  .header,
+  .footer,
+  .sidebar,
+  .nav,
+  .breadcrumbs,
+  .pagination,
+  .actions,
+  .btn,
+  button,
+  [role="button"],
+  .modal,
+  .tooltip,
+  .notification,
+  .alert,
+  .ad,
+  .banner,
+  .social-share,
+  .comments,
+  .related-posts,
+  .newsletter,
+  .print-hide {
+    display: none !important;
+  }
+
+  /* Ensure links are visible and include URLs */
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  /* Add URL after links */
+  a[href^='http']:not([href*='javascript:']):after {
+    content: ' (' attr(href) ')';
+    font-size: 90%;
+    color: #666;
+    text-decoration: none;
+  }
+
+  /* Don't show URL for anchor links */
+  a[href^='#']:after,
+  a[href^='javascript:']:after {
+    content: '';
+  }
+
+  /* Improve heading styles */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    color: #000;
+  }
+
+  h1 { font-size: 24pt; }
+  h2 { font-size: 18pt; }
+  h3 { font-size: 16pt; }
+  h4 { font-size: 14pt; }
+  h5, h6 { font-size: 12pt; }
+
+  /* Prevent page breaks inside important elements */
+  p, h2, h3, blockquote, ul, ol, dl, figure, pre, table, img, .no-break {
+    page-break-inside: avoid;
+  }
+
+  /* Page breaks */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+
+  /* Table styling for print */
+  table {
+    page-break-inside: auto;
+    width: 100% !important;
+    border-collapse: collapse;
+    margin: 1em 0;
+  }
+  
+  table td, table th {
+    border: 1px solid #ddd;
+    padding: 6px 8px;
+  }
+  
+  table th {
+    background-color: #f5f5f5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Images */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Code blocks */
+  pre, code {
+    white-space: pre-wrap !important;
+    word-wrap: break-word;
+    background-color: #f8f8f8;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 15px;
+    margin: 1em 0;
+    color: #555;
+  }
+
+  /* Lists */
+  ul, ol {
+    margin: 1em 0;
+    padding-left: 2em;
+  }
+
+  /* Page margins for content */
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Hide print button on printed pages */
+  .print-button {
+    display: none;
+  }
+
+  /* Show print-only elements */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Print URL and page info */
+  .print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 10pt;
+    color: #777;
+    border-top: 1px solid #eee;
+    padding: 10px 0;
+  }
+
+  /* Force background colors and images for print */
+  .force-print-bg {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* End of Print Styles */

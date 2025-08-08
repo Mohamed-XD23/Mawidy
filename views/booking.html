@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="booking_title">حجز موعد – Mawidy</title>
+  
+  
+  <!-- Font Awesome -->
+  
+  <script src="../controllers/theme-manager.js"></script>
+  <script type="module" src="../controllers/utils.js"></script>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body class="booking-page"> 
+  <header class="header">
+    <div class="container">
+      <div class="header__brand">
+        <h1 class="header__logo">Mawidy</h1>
+      </div>
+      <nav class="header__nav">
+        <a href="index.html" class="header__link" data-i18n="home">الرئيسية</a>
+        <a href="worker_list.html" class="header__link" data-i18n="workers">الحلاقين</a>
+        <a href="login.html" class="btn btn--secondary header__login" data-i18n="login">تسجيل الدخول</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="booking-page__main">
+    <div class="booking-page__container">
+      <header class="booking-page__header">
+        <h1 class="booking-page__title" data-i18n="book_your_appointment">
+          <i class="fas fa-calendar-plus booking-page__title-icon"></i>
+          <span>احجز موعدك</span>
+        </h1>
+        <p class="booking-page__description" data-i18n="choose_service_date_time">اختر الخدمة والتاريخ والوقت المناسب لك</p>
+      </header>
+
+      <!-- Worker Info Card -->
+      <div class="booking-page__worker-card card">
+        <div class="booking-page__worker-header">
+          <div class="booking-page__worker-avatar">
+            <i class="fas fa-user-circle booking-page__worker-icon"></i>
+          </div>
+          <div class="booking-page__worker-info">
+            <h3 id="worker-name" class="booking-page__worker-name" data-i18n="worker_name">
+              <i class="fas fa-user-tie booking-page__worker-icon-prefix"></i>
+              <span>اسم الحلاق</span>
+            </h3>
+            <div class="booking-page__rating">
+              <i class="fas fa-star booking-page__rating-icon"></i>
+              <span class="booking-page__rating-value">4.8</span>
+              <span class="booking-page__rating-count">(24 تقييم)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Form -->
+      <div class="booking-page__form card">
+        <form id="booking-form" class="booking-page__form-container">
+          <div class="booking-page__form-group">
+            <label for="service" class="booking-page__form-label" data-i18n="service">
+              <i class="fas fa-scissors booking-page__form-icon"></i>
+              <span>الخدمة</span>
+            </label>
+            <div class="booking-page__service-options" id="service-options">
+              <!-- Service options will be populated by JavaScript -->
+            </div>
+          </div>
+
+          <div class="booking-page__form-group">
+            <label for="date" class="booking-page__form-label" data-i18n="date">
+              <i class="far fa-calendar-alt booking-page__form-icon"></i>
+              <span>التاريخ</span>
+            </label>
+            <div class="booking-page__input-container">
+              <input type="date" id="date" name="date" class="booking-page__form-input" required>
+              <i class="fas fa-calendar-day booking-page__input-icon"></i>
+            </div>
+          </div>
+
+          <div class="booking-page__form-group">
+            <label for="time" class="booking-page__form-label" data-i18n="time">
+              <i class="far fa-clock booking-page__form-icon"></i>
+              <span>الوقت</span>
+            </label>
+            <div class="booking-page__select-container">
+              <select id="time" name="time" class="booking-page__form-select" required>
+                <option value="" data-i18n="choose_time">اختر الوقت...</option>
+                <!-- Time slots will be populated by JavaScript -->
+              </select>
+              <i class="fas fa-chevron-down booking-page__select-arrow"></i>
+            </div>
+          </div>
+
+          <!-- Price Summary -->
+          <div class="booking-page__price-summary">
+            <div class="booking-page__price-row">
+              <span class="booking-page__price-label" data-i18n="total_price">السعر الإجمالي:</span>
+              <span class="booking-page__price-amount">
+                <span id="total-price">0</span>
+                <span class="booking-page__price-currency">دج</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div id="empty-state" class="booking-page__empty-state" style="display: none;">
+            <i class="fas fa-user-slash booking-page__empty-icon"></i>
+            <h3 class="booking-page__empty-title" data-i18n="no_workers_available">لا توجد حلاقين متاحين</h3>
+            <p class="booking-page__empty-message" data-i18n="no_workers_available_desc">عذرًا، لا توجد حلاقين متاحين في الوقت الحالي للحجز</p>
+            <button class="btn btn--secondary booking-page__reload-btn" onclick="location.reload()">
+              <i class="fas fa-redo booking-page__btn-icon"></i>
+              <span data-i18n="reload">إعادة التحميل</span>
+            </button>
+          </div>
+
+          <button type="submit" id="confirmBooking" class="btn btn--primary booking-page__submit-btn">
+            <i class="fas fa-calendar-check booking-page__btn-icon"></i>
+            <span data-i18n="confirm_booking">تأكيد الحجز</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/booking.js"></script>
+</body>
+</html>
